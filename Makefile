@@ -2,7 +2,7 @@ TARGET ?= oDriveApp
 CC ?= g++
 CFLAGS = -g -Wall -O0
 LDFLAGS = -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -fstack-protector-strong -Wl,-z,relro,-z,now
-LIBS ?=
+LIBS ?= -pthread
 
 .PHONY: clean all default
 

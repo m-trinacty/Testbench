@@ -58,8 +58,11 @@ public:
     float getPosCircular(int axis);
     float getPosCprCounts(int axis);
     int getLockinVelocity(int axis);
+    float getVelocity(int axis);
     float getPosInTurns(int axis);
     bool getMinEndstop(int axis);
+    float getCurrent(int axis);
+    float getIqMeasured(int axis);
     int setPosInTurns(int axis, float pos);
     int setPos(int axis, float pos);    
     int setMinEndstop(int axis, bool enabled);

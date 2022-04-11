@@ -7,13 +7,16 @@
 #include "oDrive.h"
 
 #include <string>
+#include <memory>
+
 #include <unistd.h>
+
 #define	ERROR_COMMAND_WRITE   "ERROR could not write command"
 #define	ERROR_COMMAND_READ   "ERROR could not read command"
 #define INVALID_PROPERTY    "invalid property"
 #define INVALID_COMMAND_FORMAT  "invalid command format"
 #define UNKNOWN_COMMAND "unknown command"
-#define PRINT_READ_VALUES   true
+#define PRINT_READ_VALUES   false
 
 
 int oDrive::setMinEndstop(int axis, bool enabled)
@@ -48,6 +51,50 @@ bool oDrive::getMinEndstop(int axis)
 #endif
     bool homed = std::stoi(out)==1?true:false;
     return homed;
+}
+
+float oDrive::getCurrent(int axis)
+{
+    std::string out;
+    std::string command = "r axis"+std::to_string(axis)+".ibus";
+    if (m_oDrivePort->writeToPort(command)<0) {
+        std::cout<<ERROR_COMMAND_WRITE<<std::endl;
+        return EXIT_FAILURE;
+    }
+    usleep(100);
+    out = m_oDrivePort->readFromPort();
+    if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
+        std::cout<<ERROR_COMMAND_READ<<std::endl;
+        return EXIT_FAILURE;
+    }
+#if PRINT_READ_VALUES
+
+    std::cout<< out << std::endl;
+#endif
+    float current =std::stof(out);
+    return current;
+}
+
+float oDrive::getIqMeasured(int axis)
+{
+    std::string out;
+    std::string command = "r axis"+std::to_string(axis)+".motor.current_control.Iq_measured";
+    if (m_oDrivePort->writeToPort(command)<0) {
+        std::cout<<ERROR_COMMAND_WRITE<<std::endl;
+        return EXIT_FAILURE;
+    }
+    usleep(100);
+    out = m_oDrivePort->readFromPort();
+    if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
+        std::cout<<ERROR_COMMAND_READ<<std::endl;
+        return EXIT_FAILURE;
+    }
+#if PRINT_READ_VALUES
+
+    std::cout<< out << std::endl;
+#endif
+    float current =std::stof(out);
+    return current;
 }
 
 oDrive::oDrive() {
@@ -270,6 +317,29 @@ int oDrive::getLockinVelocity(int axis){
     std::cout << out << std::endl;
 #endif
     return EXIT_SUCCESS;
+}
+
+float oDrive::getVelocity(int axis)
+{
+    std::string command = "r axis"+std::to_string(axis)+".encoder.vel_estimate";
+    std::string out;
+    std::string delimiter = " ";
+    float velocity;
+    if(m_oDrivePort->writeToPort(command)<0){
+        std::cout<<ERROR_COMMAND_WRITE<<std::endl;
+        return 0;
+    }
+    usleep(100);
+    out = m_oDrivePort->readFromPort();
+    if (out == INVALID_PROPERTY || out == INVALID_COMMAND_FORMAT || out == UNKNOWN_COMMAND) {
+        std::cout<<ERROR_COMMAND_READ<<std::endl;
+        return EXIT_FAILURE;
+    }
+#if PRINT_READ_VALUES
+    std::cout << out << std::endl;
+#endif
+    velocity =stof(out.substr(0,out.find(delimiter)));
+    return velocity;
 }
 
 float oDrive::getPosInTurns(int axis){

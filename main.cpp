@@ -7,97 +7,211 @@
 #include <string>
 #include <memory>
 #include <chrono>
-
+#include <errno.h>
+#include <syslog.h>
+#include <signal.h>
+#include <string.h>
+#include <filesystem>
 #include <sstream>
 #include <iomanip>
 #include <thread>
 #include <fstream>
-
+#include <queue>
+#include <sys/stat.h>
 #include "oDrive.h"
 #include "pps.h"
-#include "timemanager.h"
+#include "logger.h"
+#include "helper.h"
+#include "server.h"
 
-int main() {
-    //TODO: add clear error function
-    //TODO: axis checking to deactivate endstop
-    //TODO: wifi connection
+#include <unistd.h>
+
+
+#define STOP 1
+
+std::shared_ptr<Server> server;
+std::string logFilePath="/var/log/tevogs/";
+std::string logFileName = "/var/log/tevogs/testbench.log";
+std::ofstream logFile;
+std::queue<std::string> messageQueue;
+std::mutex m;
+
+void intHandler(int dummy) {
+    logFile<<"Killed"<<std::endl;
+    server->closeConnection();
+}
+void spin(){
     const std::string portName = "/dev/oDrive";
     std::unique_ptr<oDrive> odrive(new oDrive(portName));
+
     odrive->clearErrors(0);
-    odrive->getMinEndstop(0)?std::cout<<"True"<<std::endl:std::cout<<"False"<<std::endl;
+    odrive->getMinEndstop(0);
     odrive->setHoming(0);
 
-    odrive->getMinEndstop(0)?std::cout<<"True"<<std::endl:std::cout<<"False"<<std::endl;
+    odrive->getMinEndstop(0);
     odrive->clearErrors(0);
     odrive->setMinEndstop(0,false);
 
-    odrive->getMinEndstop(0)?std::cout<<"True"<<std::endl:std::cout<<"False"<<std::endl;
-    std::cout<<"closedLOop"<<std::endl;
+    odrive->getMinEndstop(0);
+    odrive->clearErrors(0);
     odrive->setAxisState(0,odrive->AXIS_STATE_CLOSED_LOOP_CONTROL);
 
     float posCircular=odrive->getPosCircular(0);
     float posEstimate=odrive->getPosEstimate(0);
     float posEstimateCounts = odrive->getPosEstimateCounts(0);
     float posInTurns = odrive->getPosInTurns(0);
+    float IqMeasurd = odrive->getIqMeasured(0);
 
-    auto now=std::chrono::system_clock::now();
-    auto nowTime =  std::chrono::system_clock::to_time_t(now);
+    /*
+    pridat parsovani rychlosti a vyprcnut z queue
+    */
+
+    float velF=0.0;
+    std::string msg = messageQueue.front();
+    int spacePos=msg.find(" ");
+    velF=stof(msg.substr(spacePos,2));
+    m.lock();
+    messageQueue.pop();
+    m.unlock();
+
     auto start = std::chrono::steady_clock::now();
-    std::stringstream ss;
-    std::stringstream fileName;
+
+    logFile<<Logger::header();
+
+    logFile<<std::endl<<Logger::getTime()<<std::endl;
+    logFile<<"HOMING POSITION"<<std::endl<<Logger::record(posCircular,posEstimate,posEstimateCounts,posInTurns,IqMeasurd)<<std::endl<<"HOMING POSITION"<<std::endl;
 
 
-    fileName << std::put_time(std::localtime(&nowTime),"%Y-%m-%d_%X");
-    std::ofstream spinLog("spinLog_"+fileName.str()+".log");
+    logFile<<"Velocity = "<<std::to_string(velF)<<std::endl;
 
-    ss<<std::put_time(std::localtime(&nowTime),"%Y-%m-%d %X");
-    spinLog<<"TIME,POS_CIRCULAR,POS_ESTIMATE,POS_ESTIMATE_COUNTS;"<<std::endl;
-    std::cout<<"sys_clock::now() = "<< ss.str()<<std::endl;
-    std::cout<<"Setting velocity to 1"<<std::endl;
-    float velocity = 5.0;
-    odrive->setVelocity(0,velocity);
-    spinLog<<"Velocity= "<<std::to_string(velocity)<<std::endl;
-    auto timer = std::chrono::seconds(1);
+    auto timer = std::chrono::milliseconds(10);
+
     while(1)
     {
+        if(!messageQueue.empty()&& messageQueue.front()=="STOP"){
 
-        if(std::chrono::steady_clock::now() - (start+timer) > std::chrono::seconds(1))
-        {
-            timer = timer+std::chrono::seconds(1);
-            now=std::chrono::system_clock::now();
-            nowTime =  std::chrono::system_clock::to_time_t(now);
-            std::stringstream ss;
-            ss<<std::put_time(std::localtime(&nowTime),"%Y-%m-%d_%X");
-            std::cout <<"Time: "<< ss.str()<<std::endl;
-
-            std::cout<<"________________________________________________"<<std::endl<<std::endl;
-            std::cout<<"Pos Circular"<<std::endl;
-            posCircular=odrive->getPosCircular(0);
-            std::cout<<posCircular<<std::endl;
-            std::cout<<"______________________________"<<std::endl<<std::endl;
-
-            std::cout<<"Pos Estimate"<<std::endl;
-            posEstimate=odrive->getPosEstimate(0);
-            std::cout<<posEstimate<<std::endl;
-            std::cout<<"______________________________"<<std::endl<<std::endl;
-
-            std::cout<<"Pos Estimate Counts"<<std::endl;
-            posEstimateCounts =odrive->getPosEstimateCounts(0);
-            std::cout<<posEstimateCounts<<std::endl;
-            std::cout<<"______________________________"<<std::endl<<std::endl;
-
-            std::cout<<"Pos in turns"<<std::endl;
-            posInTurns   =odrive->getPosInTurns(0);
-            std::cout<<posInTurns<<std::endl;
-            std::cout<<"______________________________"<<std::endl<<std::endl;
-            spinLog<<ss.str()+", "+std::to_string(posCircular)+", "+std::to_string(posEstimate)+", "+std::to_string(posEstimateCounts)+";"<<std::endl;
-        }
-        if(std::chrono::steady_clock::now()- start> std::chrono::seconds(30))
-        {
+            logFile<<"Stopping"<<std::endl;
             break;
+            m.lock();
+            messageQueue.pop();
+            m.unlock();
+        }
+        if(std::chrono::steady_clock::now() - (start+timer) > std::chrono::milliseconds(1))
+        {
+            posCircular=odrive->getPosCircular(0);
+            posEstimate=odrive->getPosEstimate(0);
+            posEstimateCounts = odrive->getPosEstimateCounts(0);
+            posInTurns = odrive->getPosInTurns(0);
+            IqMeasurd= odrive->getIqMeasured(0);
+
+            logFile<<Logger::record(posCircular,posEstimate,posEstimateCounts,posInTurns,IqMeasurd)<<std::endl;
+        }
+        if(std::chrono::steady_clock::now()- start> std::chrono::seconds(15))
+        {
+            float stopVel=odrive->getVelocity(0);
+            if(stopVel<0.05||stopVel>-0.05)
+                break;
         }
     }
     odrive->setAxisState(0,odrive->AXIS_STATE_IDLE);
+}
+
+void fofo(){
+    int run=1;
+    while (run) {
+        if(!messageQueue.empty()&& messageQueue.front().substr(0,5)=="START"){
+
+            std::cout<<"Thread:"<<messageQueue.front()<<std::endl;
+            logFile<<"Thread:"<<messageQueue.front()<<std::endl;
+            m.lock();
+            messageQueue.pop();
+            m.unlock();
+        }
+        if(!messageQueue.empty()&& messageQueue.front()=="STOP"){
+
+            std::cout<<"Thread: Stopping"<<std::endl;
+            run=0;
+            m.lock();
+            messageQueue.pop();
+            m.unlock();
+        }
+
+        logFile<<"Thread:"<<"RUN"<<std::endl;
+        if(server != NULL)
+        server->sendMessage("Run");
+        sleep(2);
+    }
+}
+
+int main(int argc,char * argv[] ) {
+    //Helper::daemonize();
+    mkdir(logFilePath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    logFile=std::ofstream(logFileName);
+    logFile<<"Start"<<std::endl;
+    try {
+        if (!logFile) {
+            syslog(LOG_ERR, "Can not open log file: %s, error: %s \n Exiting",
+                   logFileName.c_str(), strerror(errno));
+
+        }
+        signal(SIGSEGV,intHandler);
+        while (1) {
+
+            logFile<<"Waiting for connection"<<std::endl;
+            server = std::shared_ptr<Server>(new Server("192.168.151.1",1500));
+            logFile<<"Server waiting"<<std::endl;
+            server->createConnection();
+
+            logFile<<"Connection created"<<std::endl;
+            std::string message;
+            int runServer=1;
+            std::thread th;
+            while (runServer)
+            {
+                runServer=server->handleMessage();
+                message=server->getMessage();
+                logFile<<message<<std::endl;
+                std::cout<<"SUBSTRING:"<<message.substr(0,5)<<std::endl;
+                if((message.substr(0,5)=="START" && Helper::isNumber(message.substr(6,2)) && Helper::isNumber(message.substr(9,3))) && !th.joinable())
+                {
+                    m.lock();
+                    messageQueue.push(message);
+                    m.unlock();
+                    server->sendMessage("STARTING");
+                    th = std::thread(fofo);
+                }
+                if(message.substr(0,4)=="STOP" && th.joinable())
+                {
+                    m.lock();
+                    messageQueue.push(message);
+                    m.unlock();
+                    server->sendMessage("STOPING");
+                    th.join();
+                }
+                if(message.substr(0,4)=="QUIT")
+                {
+                    if(th.joinable()){
+                        m.lock();
+                        messageQueue.push("STOP");
+                        m.unlock();
+                        th.join();
+                    }
+
+                    break;
+                }
+
+            }
+
+            logFile<<"Closing Connection"<<std::endl;
+            server->closeConnection();
+            //server.reset();
+        }
+    }  catch (std::exception& e) {
+        logFile<< "Exception caught : " << e.what() << std::endl;
+        server->closeConnection();
+    }
+
+
 
     return 0;
 };

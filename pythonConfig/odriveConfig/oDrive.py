@@ -226,40 +226,40 @@ class D6374MotorOdrive:
         self.odrv_axis.encoder.config.pre_calibrated = True
 
         # ANTICOGGING calibration
-        print("Setting values for Anticogging")
+        #print("Setting values for Anticogging")
         # Put the controller in position control mode
-        self.odrv_axis.controller.config.control_mode = CONTROL_MODE_POSITION_CONTROL
-        self.odrv_axis.controller.config.input_mode = INPUT_MODE_PASSTHROUGH
-        self.odrv_axis.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+        #self.odrv_axis.controller.config.control_mode = CONTROL_MODE_POSITION_CONTROL
+        #self.odrv_axis.controller.config.input_mode = INPUT_MODE_PASSTHROUGH
+        #self.odrv_axis.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
 
-        self.odrv_axis.controller.config.anticogging.calib_pos_threshold = 40
+        #self.odrv_axis.controller.config.anticogging.calib_pos_threshold = 40
 
-        self.odrv_axis.controller.config.anticogging.calib_vel_threshold = 40
+        #self.odrv_axis.controller.config.anticogging.calib_vel_threshold = 40
 
         # Temporarily increase the gain
-        self.odrv_axis.controller.config.pos_gain = 300
-        self.odrv_axis.controller.config.vel_integrator_gain = 0.01
-        self.odrv_axis.controller.config.vel_gain = 0.01
+        #self.odrv_axis.controller.config.pos_gain = 300
+        #self.odrv_axis.controller.config.vel_integrator_gain = 0.01
+        #self.odrv_axis.controller.config.vel_gain = 0.01
 
         # set threshold for calibration higher
-        self.odrv_axis.controller.config.anticogging.calib_vel_threshold = 80
-        self.odrv_axis.controller.config.anticogging.calib_pos_threshold = 80
+        #self.odrv_axis.controller.config.anticogging.calib_vel_threshold = 80
+        #self.odrv_axis.controller.config.anticogging.calib_pos_threshold = 80
 
         # THIS IS THE MAGIC - Start the calibration
 
-        print("Starting anticogging calibration")
-        calib_time = 0
-        self.odrv_axis.controller.start_anticogging_calibration()
-        time.sleep(2)
-        calib_time = calib_time + 2
-        while self.odrv_axis.controller.config.anticogging.calib_anticogging:
-            print("Anticogging calibration: " + str(self.odrv_axis.controller.config.anticogging.calib_anticogging))
-            calib_time = calib_time + 2
-            time.sleep(2)
+        #print("Starting anticogging calibration")
+        #calib_time = 0
+        #self.odrv_axis.controller.start_anticogging_calibration()
+        #time.sleep(2)
+        #calib_time = calib_time + 2
+        #while self.odrv_axis.controller.config.anticogging.calib_anticogging:
+        #   print("Anticogging calibration: " + str(self.odrv_axis.controller.config.anticogging.calib_anticogging))
+        #   calib_time = calib_time + 2
+        #   time.sleep(2)
 
-        print("Anticogging calibration took: " + str(calib_time) + " seconds")
+        #print("Anticogging calibration took: " + str(calib_time) + " seconds")
 
-        self.odrv_axis.controller.config.anticogging.pre_calibrated = True
+        #self.odrv_axis.controller.config.anticogging.pre_calibrated = True
 
         # Put updated values for anticogging calibration back to normal
         # These are tuned values
@@ -295,7 +295,7 @@ class D6374MotorOdrive:
         self.odrv.config.gpio1_mode = GPIO_MODE_DIGITAL_PULL_DOWN
         self.odrv_axis.min_endstop.config.gpio_num = 1
         self.odrv_axis.min_endstop.config.enabled = True
-        self.odrv_axis.min_endstop.config.is_active_high = True
+        self.odrv_axis.min_endstop.config.is_active_high = False
         self.odrv_axis.min_endstop.config.offset = 0
         self.odrv_axis.min_endstop.config.debounce_ms = 50
         print("Homing configuration")
