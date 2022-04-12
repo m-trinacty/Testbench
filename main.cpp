@@ -17,6 +17,7 @@
 #include <thread>
 #include <fstream>
 #include <queue>
+#include <vector>
 #include <sys/stat.h>
 #include "oDrive.h"
 #include "pps.h"
@@ -62,9 +63,7 @@ void spin(){
     float posInTurns = odrive->getPosInTurns(0);
     float IqMeasurd = odrive->getIqMeasured(0);
 
-    /*
-    pridat parsovani rychlosti a vyprcnut z queue
-    */
+
 
     float velF=0.0;
     std::string msg = messageQueue.front();
@@ -130,6 +129,8 @@ void fofo(){
         if(!messageQueue.empty()&& messageQueue.front()=="STOP"){
 
             std::cout<<"Thread: Stopping"<<std::endl;
+
+            logFile<<"Thread:"<<"STOP"<<std::endl;
             run=0;
             m.lock();
             messageQueue.pop();
@@ -145,6 +146,7 @@ void fofo(){
 
 int main(int argc,char * argv[] ) {
     //Helper::daemonize();
+    Helper::setSyslog();
     mkdir(logFilePath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     logFile=std::ofstream(logFileName);
     logFile<<"Start"<<std::endl;
@@ -171,8 +173,17 @@ int main(int argc,char * argv[] ) {
                 runServer=server->handleMessage();
                 message=server->getMessage();
                 logFile<<message<<std::endl;
-                std::cout<<"SUBSTRING:"<<message.substr(0,5)<<std::endl;
-                if((message.substr(0,5)=="START" && Helper::isNumber(message.substr(6,2)) && Helper::isNumber(message.substr(9,3))) && !th.joinable())
+                //std::cout<<"SUBSTRING:"<<message.substr(0,5)<<" "<<message.substr(6,2) << " "<<message.substr(9,3) <<std::endl;
+                float velocity = -1;
+                int time=-1;
+                if(message.substr(0,5)=="START"){
+                    std::vector<std::string> argss=Helper::splitString(message);
+                    velocity= stof(argss.at(1));
+                    time = stoi(argss.at(2));
+                }
+
+                std::cout<<"SUBSTRING:"<<" "<<velocity << " "<<time<<std::endl;
+                if((message.substr(0,5)=="START" && time>0 && velocity>0 )&& !th.joinable())
                 {
                     m.lock();
                     messageQueue.push(message);
@@ -182,6 +193,7 @@ int main(int argc,char * argv[] ) {
                 }
                 if(message.substr(0,4)=="STOP" && th.joinable())
                 {
+
                     m.lock();
                     messageQueue.push(message);
                     m.unlock();

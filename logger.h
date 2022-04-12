@@ -11,7 +11,7 @@ class Logger
 {
 private:
     Logger(){};
-    static std::string timeStamp();
+    static std::string timestamp();
 
 public:
     static std::string header();

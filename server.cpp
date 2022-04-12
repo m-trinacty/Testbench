@@ -1,10 +1,13 @@
 #include "server.h"
 #include <iostream>
+
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <syslog.h>
+
 #include <string.h>
 #include <string>
 #include <memory>
@@ -22,7 +25,9 @@ void Server::closeConnection()
     // Close the socket
     if(m_clientSocket==-1)
     {
-        std::cerr << "Cant close connection! Quitting" << std::endl;
+
+        syslog(LOG_ERR,"Cant close connection! Quitting",errno);
+        //std::cerr << "Cant close connection! Quitting" << std::endl;
         exit(EXIT_FAILURE);
     }
     else{
@@ -40,13 +45,16 @@ int Server::handleMessage()
     int bytesReceived = recv(m_clientSocket, buf, 4096, 0);
     if (bytesReceived == -1)
     {
-        std::cerr << "Error in recv(). Quitting" << std::endl;
+
+        syslog(LOG_ERR,"Error in recv(). Quitting",errno);
+        //std::cerr << "Error in recv(). Quitting" << std::endl;
         return 0;
     }
 
     if (bytesReceived == 0)
     {
-        std::cout << "Client disconnected " << std::endl;
+
+        syslog(LOG_INFO,"Client Disconnected",errno);
         return 0;
     }
 
@@ -91,18 +99,19 @@ void Server::createSocket()
 
     // Create a socket
     m_listening = socket(AF_INET, SOCK_STREAM, 0);
-    int optval = 1;
 
     if (m_listening == -1)
     {
-        std::cerr << "Can't create a socket! Quitting" << std::endl;
+
+        syslog(LOG_ERR,"Can't create a socket! Quitting");
         exit(EXIT_FAILURE);
     }
 
     int enable = 1;
     if (setsockopt(m_listening, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
     {
-        std::cerr << "Can't set a socket options! Quitting" << std::endl;
+
+        syslog(LOG_ERR,"Can't socket options! Quitting");
         exit(EXIT_FAILURE);
     }
 
@@ -127,7 +136,8 @@ void Server::acceptConnection()
     m_clientSocket = accept(m_listening, (sockaddr*)&client, &clientSize);
     if (m_clientSocket == -1)
     {
-        std::cerr << "Cant accept client connection! Quitting" << std::endl;
+
+        syslog(LOG_ERR,"Can't accept client connection! Quitting");
         exit(EXIT_FAILURE);
     }
 
@@ -141,12 +151,15 @@ void Server::acceptConnection()
 
     if (getnameinfo((sockaddr*)&client, sizeof(client), host, NI_MAXHOST, service, NI_MAXSERV, 0) == 0)
     {
-        std::cout << host << " connected on port " << service << std::endl;
+        syslog(LOG_INFO,"%s connected on port %s",host,service);
+        //std::cout << host << " connected on port " << service << std::endl;
     }
     else
     {
         inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
-        std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
+
+        syslog(LOG_INFO,"%s connected on port %d",host,ntohs(client.sin_port));
+        //std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
     }
     // Close listening socket
     close(m_listening);

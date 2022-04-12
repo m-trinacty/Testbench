@@ -8,7 +8,7 @@
 #include <iomanip>
 
 
-std::string Logger::timeStamp()
+std::string Logger::timestamp()
 {
     std::string logString;
     std::stringstream ss;
@@ -55,7 +55,7 @@ std::string Logger::record(float posCircular, float posEstimate, float posEstima
     std::string record = ", "+std::to_string(posCircular)+", "+std::to_string(posEstimate)+", "+std::to_string(posEstimateCounts)+", "+std::to_string(posInTurns)+", "+std::to_string(iqMeasured)+";";
 
     std::string logString;
-    std::string timestamp = timeStamp();
-    logString = logString +timestamp + record;
+    std::string timeStamp = timestamp();
+    logString = logString +timeStamp + record;
     return logString;
 }

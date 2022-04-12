@@ -19,7 +19,7 @@
 #include <errno.h> // Error integer and strerror() function
 #include <termios.h> // Contains POSIX terminal control definitions
 #include <unistd.h> // write(), read(), close()
-
+#include <syslog.h>
 
 port::port() {
 	m_serialPort=-1;
@@ -32,7 +32,8 @@ port::port(std::string portName){
 int port::setInterfaceAttribs(int fd, int speed, int parity){
 	struct termios tty;
 	if (tcgetattr (fd, &tty) != 0){
-        std::cout << "Error "<< errno << " from tcgetattr: " << strerror(errno) << std::endl;
+        syslog(LOG_ERR,"Error %d from tcgetattr  ",errno);
+
         return 0;
 	}
 
@@ -58,8 +59,8 @@ int port::setInterfaceAttribs(int fd, int speed, int parity){
 	tty.c_cflag &= ~CSTOPB;
 	tty.c_cflag &= ~CRTSCTS;
 
-	if (tcsetattr (fd, TCSANOW, &tty) != 0){
-        std::cout << "Error "<< errno << " from tcsetattr: " << strerror(errno) << std::endl;
+    if (tcsetattr (fd, TCSANOW, &tty) != 0){
+        syslog(LOG_ERR,"Error %d from tcsetattr  ",errno);
         return 0;
 	}
     return EXIT_SUCCESS;
@@ -67,16 +68,16 @@ int port::setInterfaceAttribs(int fd, int speed, int parity){
 void port::setBlocking(int fd, int shouldBlock){
 	//struct termios tty;
 	memset (&portSettings, 0, sizeof portSettings);
-	if (tcgetattr (fd, &portSettings) != 0){
-        std::cout << "Error "<< errno << " from tcgetattr: " << strerror(errno) << std::endl;
+    if (tcgetattr (fd, &portSettings) != 0){
+        syslog(LOG_ERR,"Error %d from tcgetattr  ",errno);
 		return;
 	}
 
 	portSettings.c_cc[VMIN]  = shouldBlock ? 1 : 0;
 	portSettings.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
 
-	if (tcsetattr (fd, TCSANOW, &portSettings) != 0){
-        std::cout << "Error "<< errno << " from tcsetattr: " << strerror(errno) << std::endl;
+    if (tcsetattr (fd, TCSANOW, &portSettings) != 0){
+        syslog(LOG_ERR,"Error %d from tcsetattr  ",errno);
 		return;
 	}
 }
@@ -88,7 +89,8 @@ int port::openPort(std::string portName){
 	m_serialPort = open(cportName,O_RDWR | O_NOCTTY | O_SYNC);
 
 	if(m_serialPort < 0){
-        std::cout << "Error "<< errno << " from open: " << strerror(errno) << std::endl;
+        syslog(LOG_ERR,"Error %d while opening port  ",errno);
+        //std::cout << "Error "<< errno << " from open: " << strerror(errno) << std::endl;
         return 0;
 	}
 	setInterfaceAttribs(m_serialPort,B115200,0);
@@ -103,7 +105,9 @@ int port::writeToPort(std::string message){
 	msg[message.length()]='\r';
 	int numBytes = write(m_serialPort, msg, sizeof(msg));
 	if(numBytes < 0){
-        std::cout << "Error "<< errno << " writing: " << strerror(errno) << std::endl<<std::flush;
+
+        syslog(LOG_ERR,"Error %d while writing to port  ",errno);
+        //std::cout << "Error "<< errno << " writing: " << strerror(errno) << std::endl<<std::flush;
         return 0;
     }
     /*Check for return*/
@@ -113,13 +117,13 @@ int port::writeToPort(std::string message){
     }
     return numBytes;
 }
-//cant read
+
 std::string port::readFromPort(){
 	char readBuf [256];
 	int numBytes=read(m_serialPort,&readBuf,sizeof(readBuf));
     std::string output="NOT_READ";
-	if (numBytes < 0) {
-        std::cout << "Error "<< errno << " reading: " << strerror(errno) << std::endl;
+    if (numBytes < 0) {
+        syslog(LOG_ERR,"Error %d while reading from port  ",errno);
 		return output;
 	}
 	if(numBytes>0){
@@ -154,7 +158,8 @@ std::string port::getPort(){
 }
 
 port::~port() {
-    std::cout <<"Closing "<< m_portName << std::endl;
+
+    syslog(LOG_INFO,"Closing port");
 	closePort();
 	// TODO Auto-generated destructor stub
 }

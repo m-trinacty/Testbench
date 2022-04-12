@@ -11,6 +11,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <bits/stdc++.h>
+#include <vector>
 
 Helper::Helper()
 {
@@ -40,6 +42,18 @@ bool Helper::isNumber(std::string number)
     return !number.empty() && it == number.end();
 }
 
+std::vector<std::string> Helper::splitString(std::string str)
+{
+    std::stringstream ss(str);
+    std::string word;
+    std::vector<std::string> out;
+    while (ss >> word)
+    {
+        out.push_back(word);
+    }
+    return out;
+}
+
 
 int Helper::pid_fd=-1;
 char *Helper::pid_file_name=NULL;
@@ -54,6 +68,7 @@ void Helper::daemonize()
 
     /* An error occurred */
     if (pid < 0) {
+        syslog(LOG_ERR,"Error while forking");
         exit(EXIT_FAILURE);
     }
 
@@ -75,6 +90,8 @@ void Helper::daemonize()
 
     /* An error occurred */
     if (pid < 0) {
+
+        syslog(LOG_ERR,"Error while second fork");
         exit(EXIT_FAILURE);
     }
 
@@ -88,7 +105,7 @@ void Helper::daemonize()
 
     /* Change the working directory to the root directory */
     /* or another appropriated directory */
-    chdir("/");
+    //chdir("/");
 
     /* Close all open file descriptors */
     for (fd = sysconf(_SC_OPEN_MAX); fd > 0; fd--) {
@@ -107,10 +124,14 @@ void Helper::daemonize()
         pid_fd = open(pid_file_name, O_RDWR|O_CREAT, 0640);
         if (pid_fd < 0) {
             /* Can't open lockfile */
+
+            syslog(LOG_ERR,"Cant open lockfile");
             exit(EXIT_FAILURE);
         }
         if (lockf(pid_fd, F_TLOCK, 0) < 0) {
             /* Can't lock file */
+
+            syslog(LOG_ERR,"Cant lock file");
             exit(EXIT_FAILURE);
         }
         /* Get current PID */
@@ -118,4 +139,9 @@ void Helper::daemonize()
         /* Write PID to lockfile */
         write(pid_fd, str, strlen(str));
     }
+}
+
+void Helper::setSyslog()
+{
+    openlog("TevogsTestbench", LOG_PID|LOG_CONS|LOG_NDELAY, LOG_USER);
 }
