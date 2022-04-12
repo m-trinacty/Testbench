@@ -39,6 +39,7 @@ void Server::closeConnection()
 int Server::handleMessage()
 {
 
+
     memset(buf, 0, 4096);
 
     // Wait for client to send data

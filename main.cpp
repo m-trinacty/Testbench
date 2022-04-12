@@ -37,6 +37,7 @@ std::ofstream logFile;
 std::queue<std::string> messageQueue;
 std::mutex m;
 
+std::string semaphor;
 void intHandler(int dummy) {
     logFile<<"Killed"<<std::endl;
     server->closeConnection();
@@ -115,10 +116,12 @@ void spin(){
     odrive->setAxisState(0,odrive->AXIS_STATE_IDLE);
 }
 
-void fofo(){
+void fofo(int time){
     int run=1;
+    int cnt=1;
     while (run) {
-        if(!messageQueue.empty()&& messageQueue.front().substr(0,5)=="START"){
+
+        /*if(!messageQueue.empty()&& messageQueue.front().substr(0,5)=="START"){
 
             std::cout<<"Thread:"<<messageQueue.front()<<std::endl;
             logFile<<"Thread:"<<messageQueue.front()<<std::endl;
@@ -139,11 +142,44 @@ void fofo(){
 
         logFile<<"Thread:"<<"RUN"<<std::endl;
         if(server != NULL)
+        sleep(1);
+        if(cnt==time){
+            std::cout<<"Thread:END"<<std::endl;
+            m.lock();
+            messageQueue.push("END");
+            m.unlock();
+            server->sendMessage("FINISHED");
+            run=0;
+        }*/
+        std::cout<<"SEMAPHOR:"<<semaphor<<std::endl;
+        if(semaphor=="START"){
+            m.lock();
+            semaphor="RUN";
+            m.unlock();
+        }
+        if(semaphor=="END"||semaphor=="STOP")
+        {
+
+            std::cout<<"Thread:STOP"<<std::endl;
+            run=0;
+            break;
+        }
+        std::cout<<"SEMAPHOR:"<<semaphor<<std::endl;
+        sleep(1);
         server->sendMessage("Run");
-        sleep(2);
+        if(cnt==time){
+            std::cout<<"Thread:END"<<std::endl;
+            m.lock();
+            semaphor="STOP";
+            m.unlock();
+            server->sendMessage("FINISHED");
+        }
+        cnt++;
     }
 }
+void messageHandling(){
 
+}
 int main(int argc,char * argv[] ) {
     //Helper::daemonize();
     Helper::setSyslog();
@@ -168,12 +204,17 @@ int main(int argc,char * argv[] ) {
             std::string message;
             int runServer=1;
             std::thread th;
+            /*if(semaphor=="START"){
+                if(th.joinable())
+                    th.join();
+            }*/
             while (runServer)
             {
+                std::cout<<"preWait"<<std::endl;
                 runServer=server->handleMessage();
                 message=server->getMessage();
+                std::cout<<"after"<<std::endl;
                 logFile<<message<<std::endl;
-                //std::cout<<"SUBSTRING:"<<message.substr(0,5)<<" "<<message.substr(6,2) << " "<<message.substr(9,3) <<std::endl;
                 float velocity = -1;
                 int time=-1;
                 if(message.substr(0,5)=="START"){
@@ -183,34 +224,58 @@ int main(int argc,char * argv[] ) {
                 }
 
                 std::cout<<"SUBSTRING:"<<" "<<velocity << " "<<time<<std::endl;
-                if((message.substr(0,5)=="START" && time>0 && velocity>0 )&& !th.joinable())
+                if((message.substr(0,5)=="START" && time>0 && velocity>0)&& semaphor!="RUN")
                 {
+                    /*
                     m.lock();
                     messageQueue.push(message);
                     m.unlock();
                     server->sendMessage("STARTING");
-                    th = std::thread(fofo);
-                }
-                if(message.substr(0,4)=="STOP" && th.joinable())
-                {
-
+                    */
                     m.lock();
-                    messageQueue.push(message);
+                    semaphor="START";
+                    m.unlock();
+                    th = std::thread(fofo,time);
+                }
+                else if(message.substr(0,5)=="START" && semaphor == "RUN"){
+                    server->sendMessage("THREAD ALREADY RUNNING");
+
+                }
+                if(message.substr(0,4)=="STOP" /*&& !th.joinable()*/)
+                {
+                    m.lock();                    
+                    semaphor="STOP";
                     m.unlock();
                     server->sendMessage("STOPING");
-                    th.join();
+                    /*if(th.joinable())
+                        th.join();*/
                 }
                 if(message.substr(0,4)=="QUIT")
                 {
-                    if(th.joinable()){
+                    /*if(!th.joinable()){
                         m.lock();
                         messageQueue.push("STOP");
                         m.unlock();
-                        th.join();
-                    }
 
+                    }*/
+                    m.lock();
+                    semaphor="STOP";
+                    m.unlock();
                     break;
                 }
+                if(semaphor=="END"||semaphor=="STOP"){
+                    if(th.joinable()){
+                        th.join();
+
+                    }
+                }
+                /*if(!messageQueue.empty()&& messageQueue.front()=="END"){
+                    m.lock();
+                    messageQueue.pop();
+                    m.unlock();
+                    /*if(th.joinable())
+                        th.join();*/
+                //}
 
             }
 
