@@ -11,6 +11,8 @@ WARNING testbench will turn into starting position to where is inductive sensor 
 
 There is another version of this app which can be run from terminal.
 
+![alt text](https://github.com/m-trinacty/Testbench/blob/master/testbench.jpg?raw=true)
+
 ### What is this repository for? ###
 
 * Quick summary
