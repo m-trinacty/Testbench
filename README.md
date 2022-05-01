@@ -23,6 +23,10 @@ There is another version of this app which can be run from terminal.
 
 * Odrive board 24V 3.6 
 	-Firmware version : 0.5.2
+* Configured Odrive, if it is not configured yet
+	* Configuration file is in folder pythonconfig
+	* odrivetool is required
+	* connection directly to oDrive via USB
 * SDK tdx-wayland 5.3.0 build from testbench layers
 
 ### Setup ###
