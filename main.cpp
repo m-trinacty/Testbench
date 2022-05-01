@@ -42,7 +42,7 @@ void intHandler(int dummy) {
     logFile<<"Killed"<<std::endl;
     server->closeConnection();
 }
-void spin(){
+void spin(float vel, int time){
     const std::string portName = "/dev/oDrive";
     std::unique_ptr<oDrive> odrive(new oDrive(portName));
 
@@ -67,13 +67,7 @@ void spin(){
 
 
     float velF=0.0;
-    std::string msg = messageQueue.front();
-    int spacePos=msg.find(" ");
-    velF=stof(msg.substr(spacePos,2));
-    m.lock();
-    messageQueue.pop();
-    m.unlock();
-
+    velF=vel;
     auto start = std::chrono::steady_clock::now();
 
     logFile<<Logger::header();
@@ -83,75 +77,47 @@ void spin(){
 
 
     logFile<<"Velocity = "<<std::to_string(velF)<<std::endl;
-
+    odrive->setVelocity(0,vel);
     auto timer = std::chrono::milliseconds(10);
 
     while(1)
     {
-        if(!messageQueue.empty()&& messageQueue.front()=="STOP"){
-
+        if(semaphor=="END"||semaphor=="STOP")
+        {
             logFile<<"Stopping"<<std::endl;
             break;
-            m.lock();
-            messageQueue.pop();
-            m.unlock();
         }
-        if(std::chrono::steady_clock::now() - (start+timer) > std::chrono::milliseconds(1))
+
+        if(std::chrono::steady_clock::now() - (start+timer) > std::chrono::milliseconds(100))
         {
             posCircular=odrive->getPosCircular(0);
             posEstimate=odrive->getPosEstimate(0);
             posEstimateCounts = odrive->getPosEstimateCounts(0);
             posInTurns = odrive->getPosInTurns(0);
             IqMeasurd= odrive->getIqMeasured(0);
-
-            logFile<<Logger::record(posCircular,posEstimate,posEstimateCounts,posInTurns,IqMeasurd)<<std::endl;
+            std::string log=Logger::record(posCircular,posEstimate,posEstimateCounts,posInTurns,IqMeasurd);
+            server->sendMessage(log);
+            logFile<<log<<std::endl;
         }
-        if(std::chrono::steady_clock::now()- start> std::chrono::seconds(15))
+        if(std::chrono::steady_clock::now()- start> std::chrono::seconds(time))
         {
             float stopVel=odrive->getVelocity(0);
-            if(stopVel<0.05||stopVel>-0.05)
+            if(stopVel<0.05||stopVel>-0.05){
+                m.lock();
+                semaphor="STOP";
+                m.unlock();
+                server->sendMessage("FINISHED");
                 break;
+            }
         }
     }
     odrive->setAxisState(0,odrive->AXIS_STATE_IDLE);
 }
-
+/*
 void fofo(int time){
     int run=1;
     int cnt=1;
     while (run) {
-
-        /*if(!messageQueue.empty()&& messageQueue.front().substr(0,5)=="START"){
-
-            std::cout<<"Thread:"<<messageQueue.front()<<std::endl;
-            logFile<<"Thread:"<<messageQueue.front()<<std::endl;
-            m.lock();
-            messageQueue.pop();
-            m.unlock();
-        }
-        if(!messageQueue.empty()&& messageQueue.front()=="STOP"){
-
-            std::cout<<"Thread: Stopping"<<std::endl;
-
-            logFile<<"Thread:"<<"STOP"<<std::endl;
-            run=0;
-            m.lock();
-            messageQueue.pop();
-            m.unlock();
-        }
-
-        logFile<<"Thread:"<<"RUN"<<std::endl;
-        if(server != NULL)
-        sleep(1);
-        if(cnt==time){
-            std::cout<<"Thread:END"<<std::endl;
-            m.lock();
-            messageQueue.push("END");
-            m.unlock();
-            server->sendMessage("FINISHED");
-            run=0;
-        }*/
-        std::cout<<"SEMAPHOR:"<<semaphor<<std::endl;
         if(semaphor=="START"){
             m.lock();
             semaphor="RUN";
@@ -160,11 +126,9 @@ void fofo(int time){
         if(semaphor=="END"||semaphor=="STOP")
         {
 
-            std::cout<<"Thread:STOP"<<std::endl;
             run=0;
             break;
         }
-        std::cout<<"SEMAPHOR:"<<semaphor<<std::endl;
         sleep(1);
         server->sendMessage("Run");
         if(cnt==time){
@@ -177,19 +141,25 @@ void fofo(int time){
         cnt++;
     }
 }
-void messageHandling(){
-
-}
+*/
 int main(int argc,char * argv[] ) {
     //Helper::daemonize();
     Helper::setSyslog();
-    mkdir(logFilePath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    if(!Helper::fileExist(logFileName)){
+        syslog(LOG_INFO,"Creating directory");
+
+        if(mkdir(logFilePath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)<0){
+            syslog(LOG_ERR, "Can not create folder for log file %s, error %s\n",
+                   logFileName.c_str(), strerror(errno));
+        }
+    }
     logFile=std::ofstream(logFileName);
     logFile<<"Start"<<std::endl;
     try {
         if (!logFile) {
             syslog(LOG_ERR, "Can not open log file: %s, error: %s \n Exiting",
                    logFileName.c_str(), strerror(errno));
+            return EXIT_FAILURE;
 
         }
         signal(SIGSEGV,intHandler);
@@ -204,16 +174,10 @@ int main(int argc,char * argv[] ) {
             std::string message;
             int runServer=1;
             std::thread th;
-            /*if(semaphor=="START"){
-                if(th.joinable())
-                    th.join();
-            }*/
             while (runServer)
             {
-                std::cout<<"preWait"<<std::endl;
                 runServer=server->handleMessage();
                 message=server->getMessage();
-                std::cout<<"after"<<std::endl;
                 logFile<<message<<std::endl;
                 float velocity = -1;
                 int time=-1;
@@ -223,41 +187,26 @@ int main(int argc,char * argv[] ) {
                     time = stoi(argss.at(2));
                 }
 
-                std::cout<<"SUBSTRING:"<<" "<<velocity << " "<<time<<std::endl;
                 if((message.substr(0,5)=="START" && time>0 && velocity>0)&& semaphor!="RUN")
                 {
-                    /*
-                    m.lock();
-                    messageQueue.push(message);
-                    m.unlock();
-                    server->sendMessage("STARTING");
-                    */
                     m.lock();
                     semaphor="START";
                     m.unlock();
-                    th = std::thread(fofo,time);
+                    th = std::thread(spin,velocity,time);
                 }
                 else if(message.substr(0,5)=="START" && semaphor == "RUN"){
                     server->sendMessage("THREAD ALREADY RUNNING");
 
                 }
-                if(message.substr(0,4)=="STOP" /*&& !th.joinable()*/)
+                if(message.substr(0,4)=="STOP")
                 {
-                    m.lock();                    
+                    m.lock();
                     semaphor="STOP";
                     m.unlock();
                     server->sendMessage("STOPING");
-                    /*if(th.joinable())
-                        th.join();*/
                 }
                 if(message.substr(0,4)=="QUIT")
                 {
-                    /*if(!th.joinable()){
-                        m.lock();
-                        messageQueue.push("STOP");
-                        m.unlock();
-
-                    }*/
                     m.lock();
                     semaphor="STOP";
                     m.unlock();
@@ -269,14 +218,6 @@ int main(int argc,char * argv[] ) {
 
                     }
                 }
-                /*if(!messageQueue.empty()&& messageQueue.front()=="END"){
-                    m.lock();
-                    messageQueue.pop();
-                    m.unlock();
-                    /*if(th.joinable())
-                        th.join();*/
-                //}
-
             }
 
             logFile<<"Closing Connection"<<std::endl;

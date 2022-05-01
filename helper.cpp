@@ -42,6 +42,12 @@ bool Helper::isNumber(std::string number)
     return !number.empty() && it == number.end();
 }
 
+bool Helper::fileExist(const std::string &name)
+{
+    struct stat buffer;
+    return (stat (name.c_str(), &buffer) == 0);
+}
+
 std::vector<std::string> Helper::splitString(std::string str)
 {
     std::stringstream ss(str);

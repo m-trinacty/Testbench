@@ -10,6 +10,7 @@ public:
     Helper();
     static bool isNumber(char* number);
     static bool isNumber(std::string number);
+    static bool fileExist(const std::string& name);
     static std::vector<std::string> splitString(std::string str);
     static void daemonize();
     static void setSyslog();

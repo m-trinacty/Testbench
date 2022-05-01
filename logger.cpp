@@ -45,8 +45,9 @@ std::string Logger::getTimestamp()
 {
 
     std::string time;
-    uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    time = ms;
+    //uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    uint timeStamp = std::time(nullptr);
+    time = timeStamp;
     return time;
 }
 

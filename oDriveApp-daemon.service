@@ -1,0 +1,11 @@
+[Unit]
+Description=Super simple daemon
+
+[Service]
+User=root
+Type=simple
+ExecStart=/usr/local/bin/oDriveApp
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
