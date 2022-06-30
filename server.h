@@ -6,26 +6,26 @@ class Server
 {
 public:
     Server(std::string ipAdress, int port){
-        m_ipAdress = &*ipAdress.begin();
+        m_ipAddr = &*ipAdress.begin();
         m_port = port;
     }
 
-    void createConnection();
-    void closeConnection();
-    int handleMessage();
-    int sendMessage(std::string message);
-    int getFD();
-    std::string getMessage();
+    void conn_server();
+    void dconn_server();
+    int handler_msg();
+    int send_msg(std::string message);
+    int get();
+    std::string msg_get();
 private:
 
-    void createSocket();
-    void acceptConnection();
+    void create_server();
+    void acpt_server();
 
     char buf[4096];
-    char* m_ipAdress;
+    char* m_ipAddr;
     int m_port;
-    int m_listening;
-    int m_clientSocket;
+    int m_lstn;
+    int m_cliSock;
     bool m_gotFD=false;
 };
 

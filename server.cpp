@@ -14,16 +14,16 @@
 
 
 
-void Server::createConnection()
+void Server::conn_server()
 {
-    createSocket();
-    acceptConnection();
+    create_server();
+    acpt_server();
 }
 
-void Server::closeConnection()
+void Server::dconn_server()
 {
     // Close the socket
-    if(m_clientSocket==-1)
+    if(m_cliSock==-1)
     {
 
         syslog(LOG_ERR,"Cant close connection! Quitting",errno);
@@ -32,19 +32,19 @@ void Server::closeConnection()
     }
     else{
         //shutdown(m_clientSocket, SHUT_WR);
-        close(m_clientSocket);
+        close(m_cliSock);
     }
 }
 
-int Server::handleMessage()
+int Server::handler_msg()
 {
 
 
     memset(buf, 0, 4096);
 
     // Wait for client to send data
-    int bytesReceived = recv(m_clientSocket, buf, 4096, 0);
-    if (bytesReceived == -1)
+    int bytesRcv = recv(m_cliSock, buf, 4096, 0);
+    if (bytesRcv == -1)
     {
 
         syslog(LOG_ERR,"Error in recv(). Quitting",errno);
@@ -52,39 +52,39 @@ int Server::handleMessage()
         return 0;
     }
 
-    if (bytesReceived == 0)
+    if (bytesRcv == 0)
     {
 
         syslog(LOG_INFO,"Client Disconnected",errno);
         return 0;
     }
 
-    std::cout << std::string(buf, 0, bytesReceived) << std::endl;
+    //std::cout << std::string(buf, 0, bytesRcv) << std::endl;
 
     // Echo message back to client
     //send(m_clientSocket, buf, bytesReceived + 1, 0);
     return 1;
 }
 
-int Server::sendMessage(std::string message)
+int Server::send_msg(std::string message)
 {
 
     memset(buf, 0, 4096);
     strcpy(buf,message.c_str());
-    send(m_clientSocket, buf,message.length() + 1, 0);
+    send(m_cliSock, buf,message.length() + 1, 0);
     return 1;
 }
 
-int Server::getFD()
+int Server::get()
 {
 
     if(m_gotFD){
-        return m_clientSocket;
+        return m_cliSock;
     }
     return -1;
 }
 
-std::string Server::getMessage(){
+std::string Server::msg_get(){
     std::string msg = buf;
     /*int i=0;
     while(i<4096||buf[i]!='\0')
@@ -95,13 +95,13 @@ std::string Server::getMessage(){
     return msg;
 }
 
-void Server::createSocket()
+void Server::create_server()
 {
 
     // Create a socket
-    m_listening = socket(AF_INET, SOCK_STREAM, 0);
+    m_lstn = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (m_listening == -1)
+    if (m_lstn == -1)
     {
 
         syslog(LOG_ERR,"Can't create a socket! Quitting");
@@ -109,7 +109,7 @@ void Server::createSocket()
     }
 
     int enable = 1;
-    if (setsockopt(m_listening, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+    if (setsockopt(m_lstn, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
     {
 
         syslog(LOG_ERR,"Can't socket options! Quitting");
@@ -120,22 +120,22 @@ void Server::createSocket()
     sockaddr_in hint;
     hint.sin_family = AF_INET;
     hint.sin_port = htons(m_port);
-    inet_pton(AF_INET, m_ipAdress, &hint.sin_addr);
+    inet_pton(AF_INET, m_ipAddr, &hint.sin_addr);
 
-    bind(m_listening, (sockaddr*)&hint, sizeof(hint));
+    bind(m_lstn, (sockaddr*)&hint, sizeof(hint));
 
     // Tell Winsock the socket is for listening
-    listen(m_listening, SOMAXCONN);
+    listen(m_lstn, SOMAXCONN);
 }
 
-void Server::acceptConnection()
+void Server::acpt_server()
 {
     // Wait for a connection
     sockaddr_in client;
     socklen_t clientSize = sizeof(client);
 
-    m_clientSocket = accept(m_listening, (sockaddr*)&client, &clientSize);
-    if (m_clientSocket == -1)
+    m_cliSock = accept(m_lstn, (sockaddr*)&client, &clientSize);
+    if (m_cliSock == -1)
     {
 
         syslog(LOG_ERR,"Can't accept client connection! Quitting");
@@ -163,6 +163,6 @@ void Server::acceptConnection()
         //std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
     }
     // Close listening socket
-    close(m_listening);
+    close(m_lstn);
 
 }

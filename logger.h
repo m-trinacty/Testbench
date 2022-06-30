@@ -15,10 +15,10 @@ private:
 
 public:
     static std::string header();
-    static std::string getTime();
-    static std::string getTimestamp();
-    static std::string record(float posCircular,float posEstimate,float posEstimateCounts,float posInTurns,float iqMeasured);
-    static std::string velocity(float vel);
+    static std::string get_time();
+    static std::string get_timestamp();
+    static std::string create_rec(float posCircular,float posEstimate,float posEstimateCounts,float posInTurns,float iqMeasured);
+    static std::string get_vel(float vel);
 };
 
 #endif // LOGGER_H

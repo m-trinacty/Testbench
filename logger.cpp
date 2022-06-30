@@ -29,7 +29,7 @@ std::string Logger::header()
     return logString;
 }
 
-std::string Logger::getTime()
+std::string Logger::get_time()
 {
 
     auto now=std::chrono::system_clock::now();
@@ -41,7 +41,7 @@ std::string Logger::getTime()
     return logString;
 }
 
-std::string Logger::getTimestamp()
+std::string Logger::get_timestamp()
 {
 
     std::string time;
@@ -51,7 +51,7 @@ std::string Logger::getTimestamp()
     return time;
 }
 
-std::string Logger::record(float posCircular, float posEstimate, float posEstimateCounts, float posInTurns, float iqMeasured)
+std::string Logger::create_rec(float posCircular, float posEstimate, float posEstimateCounts, float posInTurns, float iqMeasured)
 {
     std::string record = ", "+std::to_string(posCircular)+", "+std::to_string(posEstimate)+", "+std::to_string(posEstimateCounts)+", "+std::to_string(posInTurns)+", "+std::to_string(iqMeasured)+";";
 

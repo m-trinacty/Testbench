@@ -20,28 +20,32 @@
 #define PRINT_READ_VALUES   false
 
 
-int oDrive::setMinEndstop(int axis, bool enabled)
+int oDrive::set_min_endstop(int axis, bool enabled)
 {
     std::string enable=enabled?"1":"0";
     std::string command = "w axis"+ std::to_string(axis)+ ".min_endstop.config.enabled "+enable;
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
     return EXIT_SUCCESS;
 }
-
-bool oDrive::getMinEndstop(int axis)
+/*!
+ * \brief oDrive::get_min_endstop
+ * \param axis
+ * \return
+ */
+bool oDrive::get_min_endstop(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".min_endstop.endstop_state";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -54,16 +58,16 @@ bool oDrive::getMinEndstop(int axis)
  * \param axis
  * \return
  */
-float oDrive::getCurrent(int axis)
+float oDrive::get_curr(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".ibus";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -72,16 +76,16 @@ float oDrive::getCurrent(int axis)
     return current;
 }
 
-float oDrive::getIqMeasured(int axis)
+float oDrive::get_curr_Iq(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".motor.current_control.Iq_measured";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -95,10 +99,10 @@ oDrive::oDrive() {
 
 }
 
-oDrive::oDrive(std::string portName){
-    m_oDrivePort = new port(portName);
+oDrive::oDrive(std::string port_name){
+    m_oDrive_port = new port(port_name);
 }
-int oDrive::commandConsole(){
+int oDrive::command_console(){
     std::string out;
     std::cout << "********************************" << std::endl;
     std::cout << "| oDrive Tool on Toradex       |" << std::endl;
@@ -118,32 +122,32 @@ int oDrive::commandConsole(){
 
         switch (startLetter) {
         case 'r':
-            m_oDrivePort->writeToPort(input);
+            m_oDrive_port->write_port(input);
             usleep(100);
-            out = m_oDrivePort->readFromPort();
+            out = m_oDrive_port->read_port();
             std::cout << out << std::endl;
             break;
         case 'w':
-            m_oDrivePort->writeToPort(input);
+            m_oDrive_port->write_port(input);
             usleep(100);
             break;
         case 'f':
-            m_oDrivePort->writeToPort(input);
+            m_oDrive_port->write_port(input);
             usleep(100);
-            out = m_oDrivePort->readFromPort();
+            out = m_oDrive_port->read_port();
             std::cout << out << std::endl;
             break;
         default:
-            m_oDrivePort->writeToPort(input);
+            m_oDrive_port->write_port(input);
             usleep(100);
             break;
         }
     }
     return EXIT_SUCCESS;
 }
-int oDrive::setAxisState(int axis,int state){
+int oDrive::set_axis_state(int axis,int state){
     std::string command = "w axis"+ std::to_string(axis)+ ".requested_state "+std::to_string(state);
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
@@ -151,9 +155,9 @@ int oDrive::setAxisState(int axis,int state){
     return EXIT_SUCCESS;
 }
 
-int oDrive::setInputMode(int axis, int mode){
+int oDrive::set_input_mode(int axis, int mode){
     std::string command = "w axis"+std::to_string(axis)+ ".controller.config.input_mode "+std::to_string(mode);
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
@@ -161,24 +165,24 @@ int oDrive::setInputMode(int axis, int mode){
     return EXIT_SUCCESS;
 }
 
-int oDrive::setVelocity(int axis, float vel)
+int oDrive::set_vel(int axis, float vel)
 {
     std::string command= "w axis"+std::to_string(axis)+".controller.input_vel " +std::to_string(vel);
-    m_oDrivePort->writeToPort(command);
+    m_oDrive_port->write_port(command);
     usleep(100);
     return EXIT_SUCCESS;
 }
-int oDrive::setLockinVelocity(int axis, float vel){
+int oDrive::set_lockin_vel(int axis, float vel){
     std::string command = "w axis"+std::to_string(axis)+".config.general_lockin.vel "+std::to_string(vel);
-    m_oDrivePort->writeToPort(command);
+    m_oDrive_port->write_port(command);
     usleep(100);
     return EXIT_SUCCESS;
 }
 
-int oDrive::clearErrors(int axis)
+int oDrive::clear_errors(int axis)
 {
     std::string command = "w axis"+std::to_string(axis)+".error 0";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
@@ -186,16 +190,16 @@ int oDrive::clearErrors(int axis)
     return EXIT_SUCCESS;
 }
 
-int oDrive::getAxisState(int axis)
+int oDrive::get_axis_state(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".current_state";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -204,16 +208,16 @@ int oDrive::getAxisState(int axis)
     return state;
 }
 
-float oDrive::getPosEstimate(int axis)
+float oDrive::get_pos_est(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".encoder.pos_estimate";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -222,16 +226,16 @@ float oDrive::getPosEstimate(int axis)
     return pos;
 }
 
-float oDrive::getPosEstimateCounts(int axis)
+float oDrive::get_pos_est_cnt(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".encoder.pos_estimate_counts";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
         std::cout<<out<<std::endl;
         syslog(LOG_ERR,ERROR_COMMAND_READ);
@@ -241,16 +245,16 @@ float oDrive::getPosEstimateCounts(int axis)
     return pos;
 }
 
-float oDrive::getPosCircular(int axis)
+float oDrive::get_pos_cir(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".encoder.pos_circular";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT || out == UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -259,16 +263,16 @@ float oDrive::getPosCircular(int axis)
     return pos;
 }
 
-float oDrive::getPosCprCounts(int axis)
+float oDrive::get_pos_cpr_cnt(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".encoder.pos_circular";
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT || out == UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -276,15 +280,15 @@ float oDrive::getPosCprCounts(int axis)
     float pos =std::stof(out);
     return pos;
 }
-int oDrive::getLockinVelocity(int axis){
+int oDrive::get_locking_vel(int axis){
     std::string command = "r axis"+std::to_string(axis)+".config.general_lockin.vel";
     std::string out;
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY || out ==  INVALID_COMMAND_FORMAT || out ==  UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -292,18 +296,18 @@ int oDrive::getLockinVelocity(int axis){
     return EXIT_SUCCESS;
 }
 
-float oDrive::getVelocity(int axis)
+float oDrive::get_vel(int axis)
 {
     std::string command = "r axis"+std::to_string(axis)+".encoder.vel_estimate";
     std::string out;
     std::string delimiter = " ";
     float velocity;
-    if(m_oDrivePort->writeToPort(command)<0){
+    if(m_oDrive_port->write_port(command)<0){
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return 0;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY || out == INVALID_COMMAND_FORMAT || out == UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -312,17 +316,17 @@ float oDrive::getVelocity(int axis)
     return velocity;
 }
 
-float oDrive::getPosInTurns(int axis){
+float oDrive::get_pos_turns(int axis){
     std::string command = "f "+std::to_string(axis);
     std::string out;
     std::string delimiter = " ";
     float pos;
-    if(m_oDrivePort->writeToPort(command)<0){
+    if(m_oDrive_port->write_port(command)<0){
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return 0;
     }
     usleep(100);
-    out = m_oDrivePort->readFromPort();
+    out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY || out == INVALID_COMMAND_FORMAT || out == UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
@@ -333,11 +337,11 @@ float oDrive::getPosInTurns(int axis){
     pos =stof(out.substr(0,out.find(delimiter)));
     return pos;
 }
-int oDrive::setPosInTurns(int axis,float pos){
+int oDrive::set_pos_turns(int axis,float pos){
     std::string command = "q "+std::to_string(axis)+" "+std::to_string(pos);
     std::string out;
     std::string delimiter = " ";
-    if(m_oDrivePort->writeToPort(command)<0){
+    if(m_oDrive_port->write_port(command)<0){
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return 0;
     }
@@ -345,10 +349,10 @@ int oDrive::setPosInTurns(int axis,float pos){
     return EXIT_SUCCESS;
 }
 
-int oDrive::setPos(int axis, float pos)
+int oDrive::set_pos(int axis, float pos)
 {
     std::string command = "w axis"+std::to_string(axis)+ ".controller.input_vel "+std::to_string(pos);
-    if (m_oDrivePort->writeToPort(command)<0) {
+    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
@@ -356,22 +360,22 @@ int oDrive::setPos(int axis, float pos)
     return EXIT_SUCCESS;
 }
 
-void oDrive::setHoming(int axis)
+void oDrive::homing(int axis)
 {
-    setMinEndstop(axis,true);
-    setAxisState(axis,AXIS_STATE_HOMING);
+    set_min_endstop(axis,true);
+    set_axis_state(axis,AXIS_STATE_HOMING);
     syslog(LOG_INFO,"Searching home");
     bool searching = false;
     while(!searching){
-        searching =getMinEndstop(axis);
+        searching =get_min_endstop(axis);
         usleep(100);
     }
-    if(getMinEndstop(axis)){
+    if(get_min_endstop(axis)){
         syslog(LOG_INFO,"Odrive homed");
     }
 }
 oDrive::~oDrive() {
-    delete m_oDrivePort;
+    delete m_oDrive_port;
     // TODO Auto-generated destructor stub
 }
 

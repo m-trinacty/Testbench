@@ -19,7 +19,7 @@ Helper::Helper()
 
 }
 
-bool Helper::isNumber(char *number)
+bool Helper::check_num(char *number)
 {
     std::string s = number;
     std::string::const_iterator it = s.begin();
@@ -31,7 +31,7 @@ bool Helper::isNumber(char *number)
 
 }
 
-bool Helper::isNumber(std::string number)
+bool Helper::check_num(std::string number)
 {
 
     std::string::const_iterator it = number.begin();
@@ -42,13 +42,13 @@ bool Helper::isNumber(std::string number)
     return !number.empty() && it == number.end();
 }
 
-bool Helper::fileExist(const std::string &name)
+bool Helper::check_file(const std::string &name)
 {
     struct stat buffer;
     return (stat (name.c_str(), &buffer) == 0);
 }
 
-std::vector<std::string> Helper::splitString(std::string str)
+std::vector<std::string> Helper::split_str(std::string str)
 {
     std::stringstream ss(str);
     std::string word;
@@ -147,7 +147,7 @@ void Helper::daemonize()
     }
 }
 
-void Helper::setSyslog()
+void Helper::cfg_syslog()
 {
     openlog("TevogsTestbench", LOG_PID|LOG_CONS|LOG_NDELAY, LOG_USER);
 }

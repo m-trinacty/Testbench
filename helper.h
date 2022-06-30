@@ -8,12 +8,12 @@ class Helper
 {
 public:
     Helper();
-    static bool isNumber(char* number);
-    static bool isNumber(std::string number);
-    static bool fileExist(const std::string& name);
-    static std::vector<std::string> splitString(std::string str);
+    static bool check_num(char* number);
+    static bool check_num(std::string number);
+    static bool check_file(const std::string& name);
+    static std::vector<std::string> split_str(std::string str);
     static void daemonize();
-    static void setSyslog();
+    static void cfg_syslog();
     static char *pid_file_name;
     static int pid_fd;
 private:

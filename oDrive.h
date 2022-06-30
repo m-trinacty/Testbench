@@ -13,11 +13,11 @@
 
 class oDrive {
 private:
-    port * m_oDrivePort;
+    port * m_oDrive_port;
 public:
 
     oDrive();
-    enum AxisState{
+    enum axis_state{
         AXIS_STATE_UNDEFINED,
         AXIS_STATE_IDLE,
         AXIS_STATE_STARTUP_SEQUENCE,
@@ -33,7 +33,7 @@ public:
         AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION,
         AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION
     };
-    enum InputMode{
+    enum input_mode{
         INPUT_MODE_INACTIVE,
         INPUT_MODE_PASSTHROUGH,
         INPUT_MODE_VEL_RAMP,
@@ -44,29 +44,29 @@ public:
         INPUT_MODE_MIRROR,
         INPUT_MODE_Tuning
     };
-    oDrive(std::string portName);
-    int commandConsole();
+    oDrive(std::string port_name);
+    int command_console();
     virtual ~oDrive();
-    int setAxisState(int axis, int state);
-    int setInputMode(int axis, int mode);
-    int setVelocity(int axis, float vel);
-    int setLockinVelocity(int axis, float vel);
-    int clearErrors(int axis);
-    int getAxisState(int axis);
-    float getPosEstimate(int axis);
-    float getPosEstimateCounts(int axis);
-    float getPosCircular(int axis);
-    float getPosCprCounts(int axis);
-    int getLockinVelocity(int axis);
-    float getVelocity(int axis);
-    float getPosInTurns(int axis);
-    bool getMinEndstop(int axis);
-    float getCurrent(int axis);
-    float getIqMeasured(int axis);
-    int setPosInTurns(int axis, float pos);
-    int setPos(int axis, float pos);    
-    int setMinEndstop(int axis, bool enabled);
-    void setHoming(int axis);
+    int set_axis_state(int axis, int state);
+    int set_input_mode(int axis, int mode);
+    int set_vel(int axis, float vel);
+    float get_vel(int axis);
+    int set_lockin_vel(int axis, float vel);
+    int get_locking_vel(int axis);
+    int clear_errors(int axis);
+    int get_axis_state(int axis);
+    float get_pos_est(int axis);
+    float get_pos_est_cnt(int axis);
+    float get_pos_cir(int axis);
+    float get_pos_cpr_cnt(int axis);
+    float get_pos_turns(int axis);
+    bool get_min_endstop(int axis);
+    float get_curr(int axis);
+    float get_curr_Iq(int axis);
+    int set_pos_turns(int axis, float pos);
+    int set_pos(int axis, float pos);
+    int set_min_endstop(int axis, bool enabled);
+    void homing(int axis);
 
 };
 

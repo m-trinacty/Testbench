@@ -16,40 +16,22 @@
 class port {
 
 private:
-    std::string m_portName;
-	struct termios portSettings;
+    std::string m_port_name;
+    struct termios port_cfg;
 
-	int m_serialPort;
-	/**
-	 *
-	 *
-	 * @param portName
-	 * @return
-	 */
-    int openPort(std::string portName);
-	/**
-	 * closePort
-	 * Closing port used for communication, after close, the port needs to be reopen.
-	 * @return
-	 */
-	int closePort();
-	int setInterfaceAttribs(int fd, int speed, int parity);
-	void setBlocking(int fd, int shouldBlock);
-	/**
-	 * charArrayToString
-	 * Convert char array returned from read() to string for easy output
-	 * @param text Returned text
-	 * @param size Size of returned text
-	 * @return
-	 */
-    std::string charArrayToString(char * text,int size);
+    int m_serial_port;
+    int open_port(std::string port_name);
+    int close_port();
+    int set_port_attribs(int fd, int speed, int parity);
+    void set_port_block(int fd, int shouldBlock);
+    std::string char_arr_to_string(char * text,int size);
 public:
 	port();
     port(std::string portName);
-    int writeToPort(std::string message);
-    std::string readFromPort();
-    int setPort(std::string portName);
-    std::string getPort();
+    int write_port(std::string message);
+    std::string read_port();
+    int set_port(std::string portName);
+    std::string get_port();
 	virtual ~port();
 
 

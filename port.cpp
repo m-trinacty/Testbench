@@ -22,14 +22,14 @@
 #include <syslog.h>
 
 port::port() {
-	m_serialPort=-1;
+	m_serial_port=-1;
 }
 port::port(std::string portName){
-	m_portName = portName;
-	openPort(m_portName);
+	m_port_name = portName;
+    open_port(m_port_name);
 }
 
-int port::setInterfaceAttribs(int fd, int speed, int parity){
+int port::set_port_attribs(int fd, int speed, int parity){
 	struct termios tty;
 	if (tcgetattr (fd, &tty) != 0){
         syslog(LOG_ERR,"Error %d from tcgetattr  ",errno);
@@ -40,7 +40,7 @@ int port::setInterfaceAttribs(int fd, int speed, int parity){
 	cfsetospeed (&tty, speed);
 	cfsetispeed (&tty, speed);
 
-	tty.c_cflag = (portSettings.c_cflag & ~CSIZE) | CS8;     // 8-bit chars
+	tty.c_cflag = (port_cfg.c_cflag & ~CSIZE) | CS8;     // 8-bit chars
 	// disable IGNBRK for mismatched speed tests; otherwise receive break
 	// as \000 chars
 	tty.c_iflag &= ~IGNBRK;         // disable break processing
@@ -65,45 +65,45 @@ int port::setInterfaceAttribs(int fd, int speed, int parity){
 	}
     return EXIT_SUCCESS;
 }
-void port::setBlocking(int fd, int shouldBlock){
+void port::set_port_block(int fd, int shouldBlock){
 	//struct termios tty;
-	memset (&portSettings, 0, sizeof portSettings);
-    if (tcgetattr (fd, &portSettings) != 0){
+	memset (&port_cfg, 0, sizeof port_cfg);
+    if (tcgetattr (fd, &port_cfg) != 0){
         syslog(LOG_ERR,"Error %d from tcgetattr  ",errno);
 		return;
 	}
 
-	portSettings.c_cc[VMIN]  = shouldBlock ? 1 : 0;
-	portSettings.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
+	port_cfg.c_cc[VMIN]  = shouldBlock ? 1 : 0;
+	port_cfg.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
 
-    if (tcsetattr (fd, TCSANOW, &portSettings) != 0){
+    if (tcsetattr (fd, TCSANOW, &port_cfg) != 0){
         syslog(LOG_ERR,"Error %d from tcsetattr  ",errno);
 		return;
 	}
 }
 
-int port::openPort(std::string portName){
-	const char * cportName = portName.c_str();
+int port::open_port(std::string port_name){
+    const char * cportName = port_name.c_str();
 
 	//char * cportName ="/dev/ttyACM0";
-	m_serialPort = open(cportName,O_RDWR | O_NOCTTY | O_SYNC);
+    m_serial_port = open(cportName,O_RDWR | O_NOCTTY | O_SYNC);
 
-	if(m_serialPort < 0){
+	if(m_serial_port < 0){
         syslog(LOG_ERR,"Error %d while opening port  ",errno);
         //std::cout << "Error "<< errno << " from open: " << strerror(errno) << std::endl;
         return 0;
 	}
-	setInterfaceAttribs(m_serialPort,B115200,0);
+	set_port_attribs(m_serial_port,B115200,0);
 
 	return EXIT_SUCCESS;
 }
-int port::writeToPort(std::string message){
+int port::write_port(std::string message){
 	unsigned char msg[message.length()+1];
 	for (int i = 0; i < (int)message.length(); i++) {
 		msg[i]=message[i];
 	}
 	msg[message.length()]='\r';
-	int numBytes = write(m_serialPort, msg, sizeof(msg));
+	int numBytes = write(m_serial_port, msg, sizeof(msg));
 	if(numBytes < 0){
 
         syslog(LOG_ERR,"Error %d while writing to port  ",errno);
@@ -113,32 +113,32 @@ int port::writeToPort(std::string message){
     /*Check for return*/
     char readBuf [256];
     if(message[0]=='w'){
-        read(m_serialPort,&readBuf,sizeof(readBuf));
+        read(m_serial_port,&readBuf,sizeof(readBuf));
     }
     return numBytes;
 }
 
-std::string port::readFromPort(){
+std::string port::read_port(){
 	char readBuf [256];
-	int numBytes=read(m_serialPort,&readBuf,sizeof(readBuf));
+	int numBytes=read(m_serial_port,&readBuf,sizeof(readBuf));
     std::string output="NOT_READ";
     if (numBytes < 0) {
         syslog(LOG_ERR,"Error %d while reading from port  ",errno);
 		return output;
 	}
 	if(numBytes>0){
-		output = charArrayToString(readBuf,numBytes);
+        output = char_arr_to_string(readBuf,numBytes);
 	}
 	return output;
 }
 
 
-int port::closePort(){
-	close(m_serialPort);
+int port::close_port(){
+    close(m_serial_port);
 	return 0;
 }
 
-std::string port::charArrayToString(char * text,int size){
+std::string port::char_arr_to_string(char * text,int size){
 	//int size = sizeof(text)/sizeof(text[0]);
     std::string output = "";
 	for (int i = 0; i < size; ++i) {
@@ -148,19 +148,19 @@ std::string port::charArrayToString(char * text,int size){
 
 }
 
-int port::setPort(std::string portName){
-	m_portName = portName;
-	openPort(m_portName);
+int port::set_port(std::string portName){
+	m_port_name = portName;
+    open_port(m_port_name);
 	return EXIT_SUCCESS;
 }
-std::string port::getPort(){
-	return m_portName;
+std::string port::get_port(){
+	return m_port_name;
 }
 
 port::~port() {
 
     syslog(LOG_INFO,"Closing port");
-	closePort();
+    close_port();
 	// TODO Auto-generated destructor stub
 }
 
