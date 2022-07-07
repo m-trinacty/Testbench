@@ -76,9 +76,17 @@ bool oDrive::get_min_endstop(int axis)
     return homed;
 }
 /*!
- * \brief oDrive::getCurrent
- * \param axis
- * \return
+ * \brief       oDrive::get_curr
+ * \details     Current on DC bus, calculated by ODrive, when positive, ODrive is consuming power
+ *              from power supply, when negative, ODrive is sourcing power to power supply, sum of
+ *              motor current and current on brake resistor.
+ *
+ * \note        Not used in application
+ *
+ * \param       axis      int   Axis is not used here, but needed to work, otherwise command will fail
+ *
+ * \return      Measured DC bus current
+ * \retval      float   Measured DC bus current, positive or negative
  */
 float oDrive::get_curr(int axis)
 {
@@ -97,7 +105,18 @@ float oDrive::get_curr(int axis)
     float current =std::stof(out);
     return current;
 }
-
+/*!
+ * \brief       oDrive::get_curr_Iq
+ * \details     Current on measured on motor axis, used to create motor torque.It is the current
+ *              along the Q axis in Field Oriented Control Loop
+ *
+ * \note        Used in application to determine limits of maximal current and speed
+ *
+ * \param       axis      int   Axis of motor where Iq current is measured
+ *
+ * \return      Measured current along the Q axis in FOC
+ * \retval      float   Measured Iq current
+ */
 float oDrive::get_curr_Iq(int axis)
 {
     std::string out;
