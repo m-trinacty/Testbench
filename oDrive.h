@@ -15,8 +15,6 @@ class oDrive {
 private:
     port * m_oDrive_port;
 public:
-
-    oDrive();
     enum axis_state{
         AXIS_STATE_UNDEFINED,
         AXIS_STATE_IDLE,

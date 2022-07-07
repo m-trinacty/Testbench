@@ -85,7 +85,7 @@ bool oDrive::get_min_endstop(int axis)
  *
  * \param       axis      int   Axis is not used here, but needed to work, otherwise command will fail
  *
- * \return      Measured DC bus current
+ * \return      Function return measured DC bus current
  * \retval      float   Measured DC bus current, positive or negative
  */
 float oDrive::get_curr(int axis)
@@ -114,7 +114,7 @@ float oDrive::get_curr(int axis)
  *
  * \param       axis      int   Axis of motor where Iq current is measured
  *
- * \return      Measured current along the Q axis in FOC
+ * \return      Function return measured current along the Q axis in FOC
  * \retval      float   Measured Iq current
  */
 float oDrive::get_curr_Iq(int axis)
@@ -134,15 +134,25 @@ float oDrive::get_curr_Iq(int axis)
     float current =std::stof(out);
     return current;
 }
-
-oDrive::oDrive() {
-    // TODO Auto-generated constructor stub
-
-}
-
+/*!
+ * \brief       oDrive::oDrive
+ * \details     Constructor injecting name of port, where is ODrive connected
+ * \param       port_name   string  Name of port where is ODrive connected
+ */
 oDrive::oDrive(std::string port_name){
     m_oDrive_port = new port(port_name);
 }
+
+/*!
+ * \brief       oDrive::command_console
+ * \details     Endless while loop, waiting for user input with ASCII commands, loop can be
+ *              exited by command "quit". Otherwise function interacts with commands
+ *              "r" for reading f.e. "r axis0.min_endstop.endstop_state"
+ *              "w" for writing f.e. "w axis0.min_endstop.config.enabled 1"
+ *              "f" for feedback f.e."f motor"
+ * \return      Function returns status code
+ * \retval      int EXIT_SUCCES
+ */
 int oDrive::command_console(){
     std::string out;
     std::cout << "********************************" << std::endl;
@@ -186,6 +196,20 @@ int oDrive::command_console(){
     }
     return EXIT_SUCCESS;
 }
+/*!
+ * \brief       oDrive::set_axis_state
+ * \details     Function sets state of axis, which determines motors behavior, state
+ *              should be selected from enum axis_state
+ *              f.e.  AXIS_STATE_CLOSED_LOOP_CONTROL(8) is used when motor spins.
+ *
+ * \param       axis      int Axis of motor, on which is state set
+ * \param       state     int Number corresponding with state
+ *
+ * \return      Function return status code
+ *
+ * \retval      EXIT_SUCCESS    Function executed succesfully
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 int oDrive::set_axis_state(int axis,int state){
     std::string command = "w axis"+ std::to_string(axis)+ ".requested_state "+std::to_string(state);
     if (m_oDrive_port->write_port(command)<0) {
@@ -195,7 +219,18 @@ int oDrive::set_axis_state(int axis,int state){
     usleep(100);
     return EXIT_SUCCESS;
 }
-
+/*!
+ * \brief       oDrive::set_input_mode
+ * \details     Input mode define the way ODrive unit and motors are controlled, modes
+ *              should be selected from enum input_mode
+ *
+ * \param       axis      int Axis of motor, on which is control mode set
+ * \param       mode      int Number corresponding with control mode
+ * \return      Function return status code
+ *
+ * \retval      EXIT_SUCCESS    Function executed succesfully
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 int oDrive::set_input_mode(int axis, int mode){
     std::string command = "w axis"+std::to_string(axis)+ ".controller.config.input_mode "+std::to_string(mode);
     if (m_oDrive_port->write_port(command)<0) {
@@ -205,17 +240,36 @@ int oDrive::set_input_mode(int axis, int mode){
     usleep(100);
     return EXIT_SUCCESS;
 }
-
+/*!
+ * \brief       oDrive::set_vel
+ * \details     Function sets velocity in rps, which stands for rotation per second
+ *              of motor
+ * \note        Motor can do around 20 rps with load of testbench
+ *
+ * \param       axis      int   Axis of motor, on which is velocity is set
+ * \param       vel       float Velocity in rps, when negative, motor spins in other direction
+ *
+ * \return      Function return status code
+ *
+ * \retval      EXIT_SUCCESS    Function executed succesfully
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 int oDrive::set_vel(int axis, float vel)
 {
     std::string command= "w axis"+std::to_string(axis)+".controller.input_vel " +std::to_string(vel);
-    m_oDrive_port->write_port(command);
+    if (m_oDrive_port->write_port(command)<0) {
+        syslog(LOG_ERR,ERROR_COMMAND_WRITE);
+        return EXIT_FAILURE;
+    }
     usleep(100);
     return EXIT_SUCCESS;
 }
 int oDrive::set_lockin_vel(int axis, float vel){
     std::string command = "w axis"+std::to_string(axis)+".config.general_lockin.vel "+std::to_string(vel);
-    m_oDrive_port->write_port(command);
+    if (m_oDrive_port->write_port(command)<0) {
+        syslog(LOG_ERR,ERROR_COMMAND_WRITE);
+        return EXIT_FAILURE;
+    }
     usleep(100);
     return EXIT_SUCCESS;
 }
