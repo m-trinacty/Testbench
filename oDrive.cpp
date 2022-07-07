@@ -19,7 +19,21 @@
 #define UNKNOWN_COMMAND "unknown command"
 #define PRINT_READ_VALUES   false
 
-
+/*!
+ * \brief       oDrive::set_min_endstop
+ * \details     Enable or disable minimal endstop
+ *
+ * \note        This function is used in initial homing sequence before spining, after homing
+ *              its disabled to allow spining
+ *
+ * \param       axis      int   Determine axis with motor, connected with minimal endstop
+ * \param       enabled   bool  Parameter enable(true) or disable minimal endstop
+ *
+ * \return      Function returns return code
+ *
+ * \retval      EXIT_SUCCESS    Function executed succesfully
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 int oDrive::set_min_endstop(int axis, bool enabled)
 {
     std::string enable=enabled?"1":"0";
@@ -32,9 +46,17 @@ int oDrive::set_min_endstop(int axis, bool enabled)
     return EXIT_SUCCESS;
 }
 /*!
- * \brief oDrive::get_min_endstop
- * \param axis
- * \return
+ * \brief       oDrive::get_min_endstop
+ * \details     Function gives information, if motor is homed on minimal endstop position
+ *
+ * \note        Used to determine if slowly spining motor hits  minimal endstop
+ *
+ * \param       axis      int   Determine axis with motor, connected with minimal endstop
+ *
+ * \return      Function returns if motor has hit minimal endstop
+ *
+ * \retval      true    Minimal endstop was hit
+ * \retval      false   Minimal endstop was not hit
  */
 bool oDrive::get_min_endstop(int axis)
 {
