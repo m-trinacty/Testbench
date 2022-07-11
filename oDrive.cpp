@@ -264,6 +264,23 @@ int oDrive::set_vel(int axis, float vel)
     usleep(100);
     return EXIT_SUCCESS;
 }
+/*!
+ * \brief       oDrive::set_lockin_vel
+
+ * \details     Function sets velocity in rps, which stands for rotation per second
+ *              of motor, lockin velocity is used to determine velocity when
+ *              AXIS_STATE_LOCKIN_SPIN is used
+ * \note        AXIS_STATE_LOCKIN_SPIN is not usually used
+ *
+ * \param       axis      int   Axis of motor, on which is velocity is set
+ * \param       vel       float Velocity in rps, when negative, motor spins in other direction
+ *
+ * \return      Function return status code
+ *
+ * \retval      EXIT_SUCCESS    Function executed succesfully
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
+
 int oDrive::set_lockin_vel(int axis, float vel){
     std::string command = "w axis"+std::to_string(axis)+".config.general_lockin.vel "+std::to_string(vel);
     if (m_oDrive_port->write_port(command)<0) {
@@ -273,7 +290,17 @@ int oDrive::set_lockin_vel(int axis, float vel){
     usleep(100);
     return EXIT_SUCCESS;
 }
-
+/*!
+ * \brief       oDrive::clear_errors
+ * \details     Functions remove errors arised on ODrive unit, f.e. when endstop is hit. This
+ *              function allows removing this error and continue working with ODrive
+ *
+ * \param       axis      int   Axis is not used here, but needed to work, otherwise command will fail
+ * \return      Function return status code
+ *
+ * \retval      EXIT_SUCCESS    Function executed succesfully
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 int oDrive::clear_errors(int axis)
 {
     std::string command = "w axis"+std::to_string(axis)+".error 0";
@@ -284,25 +311,44 @@ int oDrive::clear_errors(int axis)
     usleep(100);
     return EXIT_SUCCESS;
 }
-
+/*!
+ * \brief       oDrive::get_axis_state
+ * \details     Function return actual state of selected axis
+ * \param       axis      int   Axis, from which is state returned
+ *
+ * \return      Axis state number, or error state
+ *
+ * \retval      (int)axis_state Actual state on axis
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 int oDrive::get_axis_state(int axis)
 {
     std::string out;
     std::string command = "r axis"+std::to_string(axis)+".current_state";
     if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
-        return EXIT_FAILURE;
+        return -EXIT_FAILURE;
     }
     usleep(100);
     out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY ||out ==  INVALID_COMMAND_FORMAT ||out ==  UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
-        return EXIT_FAILURE;
+        return -EXIT_FAILURE;
     }
     int state = std::stoi(out);
     return state;
 }
-
+/*!
+ * \brief       oDrive::get_pos_est
+ * \details     Function returns linear position estimate of the encoder, in turns. Also known
+ *              as “multi-turn” position.
+ * \param       axis    Axis, on which is motor connected and its position should be returned
+ *
+ * \return      Linear position estimate, or error state
+ *
+ * \retval      (float)pos_estimate linear position estimate
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 float oDrive::get_pos_est(int axis)
 {
     std::string out;
@@ -320,7 +366,17 @@ float oDrive::get_pos_est(int axis)
     float pos =std::stof(out);
     return pos;
 }
-
+/*!
+ * \brief       oDrive::get_pos_est_cnt
+ * \details     Function returns linear position estimate of the encoder, in counts.
+ *              Equal to pos_estimate * cpr(set on encoder, default 8192)
+ * \param       axis    Axis, on which is motor connected and its position should be returned
+ *
+ * \return      Linear position estimate counts, or error state
+ *
+ * \retval      (float)pos_estimate_counts linear position estimate counts
+ * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ */
 float oDrive::get_pos_est_cnt(int axis)
 {
     std::string out;
