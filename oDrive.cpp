@@ -266,19 +266,19 @@ int oDrive::set_vel(int axis, float vel)
 }
 /*!
  * \brief       oDrive::set_lockin_vel
-
+ *
  * \details     Function sets velocity in rps, which stands for rotation per second
  *              of motor, lockin velocity is used to determine velocity when
  *              AXIS_STATE_LOCKIN_SPIN is used
  * \note        AXIS_STATE_LOCKIN_SPIN is not usually used
  *
- * \param       axis      int   Axis of motor, on which is velocity is set
- * \param       vel       float Velocity in rps, when negative, motor spins in other direction
+ * \param       axis      int       Axis of motor, on which is velocity is set
+ * \param       vel       float     Velocity in rps, when negative, motor spins in other direction
  *
  * \return      Function return status code
  *
- * \retval      EXIT_SUCCESS    Function executed succesfully
- * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ * \retval      EXIT_SUCCESS        Function executed succesfully
+ * \retval      EXIT_FAILURE        An error occured, couldn't write command to port
  */
 
 int oDrive::set_lockin_vel(int axis, float vel){
@@ -295,11 +295,11 @@ int oDrive::set_lockin_vel(int axis, float vel){
  * \details     Functions remove errors arised on ODrive unit, f.e. when endstop is hit. This
  *              function allows removing this error and continue working with ODrive
  *
- * \param       axis      int   Axis is not used here, but needed to work, otherwise command will fail
+ * \param       axis      int       Axis is not used here, but needed to work, otherwise command will fail
  * \return      Function return status code
  *
- * \retval      EXIT_SUCCESS    Function executed succesfully
- * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ * \retval      EXIT_SUCCESS        Function executed succesfully
+ * \retval      EXIT_FAILURE        An error occured, couldn't write command to port
  */
 int oDrive::clear_errors(int axis)
 {
@@ -314,12 +314,12 @@ int oDrive::clear_errors(int axis)
 /*!
  * \brief       oDrive::get_axis_state
  * \details     Function return actual state of selected axis
- * \param       axis      int   Axis, from which is state returned
+ * \param       axis        int     Axis, from which is state returned
  *
  * \return      Axis state number, or error state
  *
- * \retval      (int)axis_state Actual state on axis
- * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ * \retval      axis_state  int     Actual state on axis
+ * \retval      -EXIT_FAILURE int   An error occured, couldn't write command to port
  */
 int oDrive::get_axis_state(int axis)
 {
@@ -342,12 +342,12 @@ int oDrive::get_axis_state(int axis)
  * \brief       oDrive::get_pos_est
  * \details     Function returns linear position estimate of the encoder, in turns. Also known
  *              as “multi-turn” position.
- * \param       axis    Axis, on which is motor connected and its position should be returned
+ * \param       axis        int     Axis, on which is motor connected and its position should be returned
  *
  * \return      Linear position estimate, or error state
  *
- * \retval      (float)pos_estimate linear position estimate
- * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ * \retval      pos_estimate float  linear position estimate
+ * \retval      EXIT_FAILURE        An error occured, couldn't write command to port
  */
 float oDrive::get_pos_est(int axis)
 {
@@ -370,12 +370,12 @@ float oDrive::get_pos_est(int axis)
  * \brief       oDrive::get_pos_est_cnt
  * \details     Function returns linear position estimate of the encoder, in counts.
  *              Equal to pos_estimate * cpr(set on encoder, default 8192)
- * \param       axis    Axis, on which is motor connected and its position should be returned
+ * \param       axis        int    Axis, on which is motor connected and its position should be returned
  *
  * \return      Linear position estimate counts, or error state
  *
- * \retval      (float)pos_estimate_counts linear position estimate counts
- * \retval      EXIT_FAILURE    An error occured, couldn't write command to port
+ * \retval      pos_estimate_counts float Linear position estimate counts
+ * \retval      EXIT_FAILURE        float An error occured, couldn't write command to port
  */
 float oDrive::get_pos_est_cnt(int axis)
 {
@@ -395,7 +395,17 @@ float oDrive::get_pos_est_cnt(int axis)
     float pos =std::stof(out);
     return pos;
 }
-
+/*!
+ * \brief       oDrive::get_pos_cir
+ * \details     Function returns circular position estimate of the encoder, as a decimal
+ *              from [0, 1). One turn of motor.
+ * \param       axis        int    Axis, on which is motor connected and its position should be returned
+ *
+ * \return      Circular position estimate counts, or error state
+ *
+ * \retval      pos_circular float[0-1)    Circular position estimate.
+ * \retval      EXIT_FAILURE float    An error occured, couldn't write command to port
+ */
 float oDrive::get_pos_cir(int axis)
 {
     std::string out;
@@ -413,7 +423,18 @@ float oDrive::get_pos_cir(int axis)
     float pos =std::stof(out);
     return pos;
 }
-
+/*!
+ * \brief       oDrive::get_pos_cpr_cnt
+ *
+ * \details     Function returns circular position estimate of the encoder, on the space [0, cpr).
+ *              CPR stands for counts per revolution, by default it is set to 8192
+ * \param       axis        int    Axis, on which is motor connected and its position should be returned
+ *
+ * \return      Circular position cpr counts, or error state
+ *
+ * \retval      pos_cpr_counts float Circular position cpr counts.
+ * \retval      EXIT_FAILURE   float An error occured, couldn't write command to port
+ */
 float oDrive::get_pos_cpr_cnt(int axis)
 {
     std::string out;
@@ -431,9 +452,24 @@ float oDrive::get_pos_cpr_cnt(int axis)
     float pos =std::stof(out);
     return pos;
 }
-int oDrive::get_locking_vel(int axis){
+/*!
+ * \brief       oDrive::get_locking_vel
+ * \details     Function return locking velocity in rps, which stands for rotation per second
+ *              of motor, lockin velocity is used with AXIS_STATE_LOCKIN_SPIN state
+ * \note        AXIS_STATE_LOCKIN_SPIN is not usually used
+ *
+ * \param       axis      int   Axis of motor, from which lockin velocity needs to be determined
+ *
+ * \return      Function return velocity, or error state
+ *
+ * \retval      vel         float Lockin velocity in rps.
+ * \retval      EXIT_FAILURE float An error occured, couldn't write command to port
+ */
+float oDrive::get_locking_vel(int axis){
     std::string command = "r axis"+std::to_string(axis)+".config.general_lockin.vel";
     std::string out;
+    std::string delimiter = " ";
+    float velocity;
     if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
@@ -444,9 +480,22 @@ int oDrive::get_locking_vel(int axis){
         syslog(LOG_ERR,ERROR_COMMAND_READ);
         return EXIT_FAILURE;
     }
-    return EXIT_SUCCESS;
+    velocity =stof(out.substr(0,out.find(delimiter)));
+    return velocity;
 }
-
+/*!
+ * \brief       oDrive::get_vel
+ * \details     Function return locking velocity in rps, which stands for rotation per second
+ *              of motor. This parameter determines velocity with INPUT_MODE_VEL_RAMP input mode and
+ *              AXIS_STATE_CLOSED_LOOP_CONTROL
+ *
+ * \param       axis      int   Axis of motor, from which velocity needs to be determined
+ *
+ * \return      Function return velocity, or error state
+ *
+ * \retval      vel         float Velocity in rps, if negative velocity means opposite direction.
+ * \retval      EXIT_FAILURE float An error occured, couldn't write command to port
+ */
 float oDrive::get_vel(int axis)
 {
     std::string command = "r axis"+std::to_string(axis)+".encoder.vel_estimate";
@@ -466,8 +515,19 @@ float oDrive::get_vel(int axis)
     velocity =stof(out.substr(0,out.find(delimiter)));
     return velocity;
 }
-
-float oDrive::get_pos_turns(int axis){
+/*!
+ * \brief       oDrive::get_pos_turns
+ *
+ * \details     Function returns circular position estimate of the encoder, on the space [0, cpr).
+ *              CPR stands for counts per revolution, by default it is set to 8192
+ * \param       axis        int    Axis, on which is motor connected and its position should be returned
+ *
+ * \return      Circular position cpr counts, or error state
+ *
+ * \retval      pos_cpr_counts float Circular position cpr counts.
+ * \retval      EXIT_FAILURE   float An error occured, couldn't write command to port
+ */
+std::string oDrive::get_motor_feedback(int axis){
     std::string command = "f "+std::to_string(axis);
     std::string out;
     std::string delimiter = " ";
@@ -480,13 +540,9 @@ float oDrive::get_pos_turns(int axis){
     out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY || out == INVALID_COMMAND_FORMAT || out == UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
-        return EXIT_FAILURE;
+        return "EXIT_FAILURE";
     }
-#if PRINT_READ_VALUES
-    std::cout << out << std::endl;
-#endif
-    pos =stof(out.substr(0,out.find(delimiter)));
-    return pos;
+    return out;
 }
 int oDrive::set_pos_turns(int axis,float pos){
     std::string command = "q "+std::to_string(axis)+" "+std::to_string(pos);
@@ -527,6 +583,5 @@ void oDrive::homing(int axis)
 }
 oDrive::~oDrive() {
     delete m_oDrive_port;
-    // TODO Auto-generated destructor stub
 }
 

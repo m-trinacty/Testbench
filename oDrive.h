@@ -50,7 +50,7 @@ public:
     int set_vel(int axis, float vel);
     float get_vel(int axis);
     int set_lockin_vel(int axis, float vel);
-    int get_locking_vel(int axis);
+    float get_locking_vel(int axis);
     int clear_errors(int axis);
     int get_axis_state(int axis);
     float get_pos_est(int axis);
