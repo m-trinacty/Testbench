@@ -518,16 +518,20 @@ float oDrive::get_vel(int axis)
 /*!
  * \brief       oDrive::get_pos_turns
  *
- * \details     Function returns circular position estimate of the encoder, on the space [0, cpr).
- *              CPR stands for counts per revolution, by default it is set to 8192
- * \param       axis        int    Axis, on which is motor connected and its position should be returned
+ * \details     Function returns feedback from selected axis of motor. Feedback consist from two parts,
+ *              encoder position in turns and encoder velocity. encoder is then extracted and converted
+ *              to float
  *
- * \return      Circular position cpr counts, or error state
+ * \note        Function parse feedback a outputs only postion
  *
- * \retval      pos_cpr_counts float Circular position cpr counts.
- * \retval      EXIT_FAILURE   float An error occured, couldn't write command to port
+ * \param       axis        int    Axis, on which is motor connected and its feedback is requested
+ *
+ * \return      pos         float  Position in turns
+ *
+ * \retval      pos            float position in turns
+ * \retval      EXIT_FAILURE float An error occured, couldn't write command to port
  */
-std::string oDrive::get_motor_feedback(int axis){
+float oDrive::get_pos_turns(int axis){
     std::string command = "f "+std::to_string(axis);
     std::string out;
     std::string delimiter = " ";
@@ -540,26 +544,34 @@ std::string oDrive::get_motor_feedback(int axis){
     out = m_oDrive_port->read_port();
     if (out == INVALID_PROPERTY || out == INVALID_COMMAND_FORMAT || out == UNKNOWN_COMMAND) {
         syslog(LOG_ERR,ERROR_COMMAND_READ);
-        return "EXIT_FAILURE";
+        return EXIT_FAILURE;
     }
-    return out;
+
+    pos =stof(out.substr(0,out.find(delimiter)));
+    return pos;
 }
+/*!
+ * \brief       oDrive::set_pos_turns
+ *
+ * \details     Function used to set one setpoint at time. Not suitable for
+ *              realtime control.
+ *
+ * \note        Used with position oriented input and control modes .
+ *
+ * \param       axis      int       Axis of motor, on which is position is set
+ * \param       pos       float     Position of turns
+ *
+ * \return      Function return status code
+ *
+ * \retval      EXIT_SUCCESS int    Function executed succesfully
+ * \retval      EXIT_FAILURE int    An error occured, couldn't write command to port
+ */
+
 int oDrive::set_pos_turns(int axis,float pos){
     std::string command = "q "+std::to_string(axis)+" "+std::to_string(pos);
     std::string out;
     std::string delimiter = " ";
     if(m_oDrive_port->write_port(command)<0){
-        syslog(LOG_ERR,ERROR_COMMAND_WRITE);
-        return 0;
-    }
-    usleep(100);
-    return EXIT_SUCCESS;
-}
-
-int oDrive::set_pos(int axis, float pos)
-{
-    std::string command = "w axis"+std::to_string(axis)+ ".controller.input_vel "+std::to_string(pos);
-    if (m_oDrive_port->write_port(command)<0) {
         syslog(LOG_ERR,ERROR_COMMAND_WRITE);
         return EXIT_FAILURE;
     }
@@ -567,6 +579,40 @@ int oDrive::set_pos(int axis, float pos)
     return EXIT_SUCCESS;
 }
 
+/*!
+ * \brief       oDrive::set_pos
+ *
+ * \details     Function to set position of motor on selected axis. This function directly access
+ *              position parameter on ODrive
+ *
+ * \note        Used with position oriented input and control modes .
+ *
+ * \param       axis      int       Axis of motor, on which is velocity is set
+ * \param       pos       float     Position in turns
+ *
+ * \return      Function return status code
+ *
+ * \retval      EXIT_SUCCESS int    Function executed succesfully
+ * \retval      EXIT_FAILURE int    An error occured, couldn't write command to port
+ */
+int oDrive::set_pos(int axis, float pos)
+{
+    std::string command = "w axis"+std::to_string(axis)+ ".controller.input_pos "+std::to_string(pos);
+    if (m_oDrive_port->write_port(command)<0) {
+        syslog(LOG_ERR,ERROR_COMMAND_WRITE);
+        return EXIT_FAILURE;
+    }
+    usleep(100);
+    return EXIT_SUCCESS;
+}
+/*!
+ * \brief       oDrive::homing
+ *
+ * \details     Function search for base position defined by placed endstop switch.
+ *
+ * \param       axis      int       Axis of motor, on which motor should be homed.
+ * \return      void
+ */
 void oDrive::homing(int axis)
 {
     set_min_endstop(axis,true);
@@ -581,6 +627,11 @@ void oDrive::homing(int axis)
         syslog(LOG_INFO,"Odrive homed");
     }
 }
+/*!
+ * \brief       oDrive::~oDrive
+ *
+ * \details     Destructors freeing memory allocated by port class
+ */
 oDrive::~oDrive() {
     delete m_oDrive_port;
 }
