@@ -3,11 +3,14 @@
 #include <stddef.h>
 #include <string>
 #include <vector>
-
-class Helper
+/*!
+ * \brief The helper class
+ * \details Class with static function to simplify some of needed functionalities, such as
+ *          checking if string is number, checking if file exist etc.
+ */
+class helper
 {
 public:
-    Helper();
     static bool check_num(char* number);
     static bool check_num(std::string number);
     static bool check_file(const std::string& name);

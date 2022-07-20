@@ -7,10 +7,14 @@
 #include <bits/unique_ptr.h>
 #include <fstream>
 #define EXTENSION ".log"
-class Logger
+/*!
+ * \brief The logger class
+ * \details Logger class provides functions for unified loging data
+ *          observed from ODrive.
+ */
+class logger
 {
 private:
-    Logger(){};
     static std::string timestamp();
 
 public:

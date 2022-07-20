@@ -26,8 +26,8 @@
  * \note        This function is used in initial homing sequence before spining, after homing
  *              its disabled to allow spining
  *
- * \param       axis      int   Determine axis with motor, connected with minimal endstop
- * \param       enabled   bool  Parameter enable(true) or disable minimal endstop
+ * \param       axis     Determine axis with motor, connected with minimal endstop
+ * \param       enabled  Parameter enable(true) or disable minimal endstop
  *
  * \return      Function returns return code
  *
@@ -51,7 +51,7 @@ int oDrive::set_min_endstop(int axis, bool enabled)
  *
  * \note        Used to determine if slowly spining motor hits  minimal endstop
  *
- * \param       axis      int   Determine axis with motor, connected with minimal endstop
+ * \param       axis     Determine axis with motor, connected with minimal endstop
  *
  * \return      Function returns if motor has hit minimal endstop
  *
@@ -83,7 +83,7 @@ bool oDrive::get_min_endstop(int axis)
  *
  * \note        Not used in application
  *
- * \param       axis      int   Axis is not used here, but needed to work, otherwise command will fail
+ * \param       axis      Axis is not used here, but needed to work, otherwise command will fail
  *
  * \return      Function return measured DC bus current
  * \retval      float   Measured DC bus current, positive or negative
@@ -112,7 +112,7 @@ float oDrive::get_curr(int axis)
  *
  * \note        Used in application to determine limits of maximal current and speed
  *
- * \param       axis      int   Axis of motor where Iq current is measured
+ * \param       axis       Axis of motor where Iq current is measured
  *
  * \return      Function return measured current along the Q axis in FOC
  * \retval      float   Measured Iq current
@@ -137,7 +137,7 @@ float oDrive::get_curr_Iq(int axis)
 /*!
  * \brief       oDrive::oDrive
  * \details     Constructor injecting name of port, where is ODrive connected
- * \param       port_name   string  Name of port where is ODrive connected
+ * \param       port_name    Name of port where is ODrive connected
  */
 oDrive::oDrive(std::string port_name){
     m_oDrive_port = new port(port_name);
@@ -202,8 +202,8 @@ int oDrive::command_console(){
  *              should be selected from enum axis_state
  *              f.e.  AXIS_STATE_CLOSED_LOOP_CONTROL(8) is used when motor spins.
  *
- * \param       axis      int Axis of motor, on which is state set
- * \param       state     int Number corresponding with state
+ * \param       axis       Axis of motor, on which is state set
+ * \param       state      Number corresponding with state
  *
  * \return      Function return status code
  *
@@ -224,8 +224,8 @@ int oDrive::set_axis_state(int axis,int state){
  * \details     Input mode define the way ODrive unit and motors are controlled, modes
  *              should be selected from enum input_mode
  *
- * \param       axis      int Axis of motor, on which is control mode set
- * \param       mode      int Number corresponding with control mode
+ * \param       axis      Axis of motor, on which is control mode set
+ * \param       mode      Number corresponding with control mode
  * \return      Function return status code
  *
  * \retval      EXIT_SUCCESS    Function executed succesfully
@@ -246,8 +246,8 @@ int oDrive::set_input_mode(int axis, int mode){
  *              of motor
  * \note        Motor can do around 20 rps with load of testbench
  *
- * \param       axis      int   Axis of motor, on which is velocity is set
- * \param       vel       float Velocity in rps, when negative, motor spins in other direction
+ * \param       axis      Axis of motor, on which is velocity is set
+ * \param       vel       Velocity in rps, when negative, motor spins in other direction
  *
  * \return      Function return status code
  *
@@ -272,8 +272,8 @@ int oDrive::set_vel(int axis, float vel)
  *              AXIS_STATE_LOCKIN_SPIN is used
  * \note        AXIS_STATE_LOCKIN_SPIN is not usually used
  *
- * \param       axis      int       Axis of motor, on which is velocity is set
- * \param       vel       float     Velocity in rps, when negative, motor spins in other direction
+ * \param       axis      Axis of motor, on which is velocity is set
+ * \param       vel       Velocity in rps, when negative, motor spins in other direction
  *
  * \return      Function return status code
  *
@@ -295,7 +295,7 @@ int oDrive::set_lockin_vel(int axis, float vel){
  * \details     Functions remove errors arised on ODrive unit, f.e. when endstop is hit. This
  *              function allows removing this error and continue working with ODrive
  *
- * \param       axis      int       Axis is not used here, but needed to work, otherwise command will fail
+ * \param       axis      Axis is not used here, but needed to work, otherwise command will fail
  * \return      Function return status code
  *
  * \retval      EXIT_SUCCESS        Function executed succesfully
@@ -314,7 +314,7 @@ int oDrive::clear_errors(int axis)
 /*!
  * \brief       oDrive::get_axis_state
  * \details     Function return actual state of selected axis
- * \param       axis        int     Axis, from which is state returned
+ * \param       axis       Axis, from which is state returned
  *
  * \return      Axis state number, or error state
  *
@@ -342,7 +342,7 @@ int oDrive::get_axis_state(int axis)
  * \brief       oDrive::get_pos_est
  * \details     Function returns linear position estimate of the encoder, in turns. Also known
  *              as “multi-turn” position.
- * \param       axis        int     Axis, on which is motor connected and its position should be returned
+ * \param       axis       Axis, on which is motor connected and its position should be returned
  *
  * \return      Linear position estimate, or error state
  *
@@ -370,7 +370,7 @@ float oDrive::get_pos_est(int axis)
  * \brief       oDrive::get_pos_est_cnt
  * \details     Function returns linear position estimate of the encoder, in counts.
  *              Equal to pos_estimate * cpr(set on encoder, default 8192)
- * \param       axis        int    Axis, on which is motor connected and its position should be returned
+ * \param       axis       Axis, on which is motor connected and its position should be returned
  *
  * \return      Linear position estimate counts, or error state
  *
@@ -399,7 +399,7 @@ float oDrive::get_pos_est_cnt(int axis)
  * \brief       oDrive::get_pos_cir
  * \details     Function returns circular position estimate of the encoder, as a decimal
  *              from [0, 1). One turn of motor.
- * \param       axis        int    Axis, on which is motor connected and its position should be returned
+ * \param       axis        Axis, on which is motor connected and its position should be returned
  *
  * \return      Circular position estimate counts, or error state
  *
@@ -428,7 +428,7 @@ float oDrive::get_pos_cir(int axis)
  *
  * \details     Function returns circular position estimate of the encoder, on the space [0, cpr).
  *              CPR stands for counts per revolution, by default it is set to 8192
- * \param       axis        int    Axis, on which is motor connected and its position should be returned
+ * \param       axis      Axis, on which is motor connected and its position should be returned
  *
  * \return      Circular position cpr counts, or error state
  *
@@ -458,7 +458,7 @@ float oDrive::get_pos_cpr_cnt(int axis)
  *              of motor, lockin velocity is used with AXIS_STATE_LOCKIN_SPIN state
  * \note        AXIS_STATE_LOCKIN_SPIN is not usually used
  *
- * \param       axis      int   Axis of motor, from which lockin velocity needs to be determined
+ * \param       axis      Axis of motor, from which lockin velocity needs to be determined
  *
  * \return      Function return velocity, or error state
  *
@@ -489,7 +489,7 @@ float oDrive::get_locking_vel(int axis){
  *              of motor. This parameter determines velocity with INPUT_MODE_VEL_RAMP input mode and
  *              AXIS_STATE_CLOSED_LOOP_CONTROL
  *
- * \param       axis      int   Axis of motor, from which velocity needs to be determined
+ * \param       axis      Axis of motor, from which velocity needs to be determined
  *
  * \return      Function return velocity, or error state
  *
@@ -524,9 +524,9 @@ float oDrive::get_vel(int axis)
  *
  * \note        Function parse feedback a outputs only postion
  *
- * \param       axis        int    Axis, on which is motor connected and its feedback is requested
+ * \param       axis        Axis, on which is motor connected and its feedback is requested
  *
- * \return      pos         float  Position in turns
+ * \return      Function return position in turns
  *
  * \retval      pos            float position in turns
  * \retval      EXIT_FAILURE float An error occured, couldn't write command to port
@@ -558,8 +558,8 @@ float oDrive::get_pos_turns(int axis){
  *
  * \note        Used with position oriented input and control modes .
  *
- * \param       axis      int       Axis of motor, on which is position is set
- * \param       pos       float     Position of turns
+ * \param       axis     Axis of motor, on which is position is set
+ * \param       pos      Position of turns
  *
  * \return      Function return status code
  *
@@ -587,8 +587,8 @@ int oDrive::set_pos_turns(int axis,float pos){
  *
  * \note        Used with position oriented input and control modes .
  *
- * \param       axis      int       Axis of motor, on which is velocity is set
- * \param       pos       float     Position in turns
+ * \param       axis      Axis of motor, on which is velocity is set
+ * \param       pos       Position in turns
  *
  * \return      Function return status code
  *
@@ -610,8 +610,8 @@ int oDrive::set_pos(int axis, float pos)
  *
  * \details     Function search for base position defined by placed endstop switch.
  *
- * \param       axis      int       Axis of motor, on which motor should be homed.
- * \return      void
+ * \param       axis      Axis of motor, on which motor should be homed.
+ * \return      Function is void type, so id does not return anything
  */
 void oDrive::homing(int axis)
 {

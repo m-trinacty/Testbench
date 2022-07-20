@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ODrive library: Main Page</title>
+<title>ODrive library: README</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,6 +23,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ODrive library
    </div>
+   <div id="projectbrief">Library for controlling ODrive unit and motors written in C++ and store data from it</div>
   </td>
  </tr>
  </tbody>
@@ -60,11 +61,58 @@ $(function() {
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">ODrive library Documentation</div>  </div>
+<div class="title">README </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_README"></a> This is app for controlling GNSS Tevogs Tesbench. This app runs as daemon on tevogs computer, has open port on 1500. For this purpose is created simple GUI to connect and control testbench. Service is set to start at system startup and restart in every failure, which may be caused by emergency stop. positions are logged into /var/log/tevogs/testbench.log</p>
+<p>Parameters for app are set in Rounds per second of motor, for example 20 rps will result in about 40km/h of angular speed at the end of testbench, where reciever devices are placed. Second parameter is timelength of spin, whic is set in seconds.</p>
+<p>WARNING testbench will turn into starting position to where is inductive sensor placed at startup and before every spinsession start, dont stand in the way of arms of testbench. Use emergency stop to get out of way. Then release the emergency stop WARNING</p>
+<p>There is another version of this app which can be run from terminal.</p>
+<p><img src="https://github.com/m-trinacty/Testbench/blob/master/testbench.jpg?raw=true" alt="alt text" class="inline"/></p>
+<h2><a class="anchor" id="autotoc_md1"></a>
+What is this repository for?</h2>
+<ul>
+<li>Quick summary</li>
+<li>Set up</li>
+<li>Usage</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md2"></a>
+Prerequisities</h2>
+<ul>
+<li>Odrive board 24V 3.6 -Firmware version : 0.5.2</li>
+<li>Configured Odrive, if it is not configured yet<ul>
+<li>Configuration file is in folder pythonconfig</li>
+<li>odrivetool is required</li>
+<li>connection directly to <a class="el" href="classoDrive.html" title="The oDrive class.">oDrive</a> via USB</li>
+</ul>
+</li>
+<li>SDK tdx-wayland 5.3.0 build from testbench layers</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Setup</h2>
+<ul>
+<li>Build</li>
+<li>Deploy to toradex </li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Setup service</h2>
+<ul>
+<li>Place oDriveApp-daemon.service in /etc/systemd/system</li>
+<li>Run "systemctl daemon-reload command"</li>
+<li>Run "systemctl start oDriveApp-daemon.service"</li>
+<li>Run "systemctl enable oDriveApp-daemon.service"</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Usage</h2>
+<ul>
+<li>Power up testbench</li>
+<li>Connect to testbench via wifi</li>
+<li>Start GUI app, whic automatically connects to port, it may sometimes take a while for port to be able to connect</li>
+<li>Spin testbench </li>
+</ul>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

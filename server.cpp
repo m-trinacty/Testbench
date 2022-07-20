@@ -14,13 +14,13 @@
 
 
 
-void Server::conn_server()
+void server::conn_server()
 {
     create_server();
     acpt_server();
 }
 
-void Server::dconn_server()
+void server::dconn_server()
 {
     // Close the socket
     if(m_cliSock==-1)
@@ -36,7 +36,7 @@ void Server::dconn_server()
     }
 }
 
-int Server::handler_msg()
+int server::handler_msg()
 {
 
 
@@ -66,7 +66,7 @@ int Server::handler_msg()
     return 1;
 }
 
-int Server::send_msg(std::string message)
+int server::send_msg(std::string message)
 {
 
     memset(buf, 0, 4096);
@@ -75,7 +75,7 @@ int Server::send_msg(std::string message)
     return 1;
 }
 
-int Server::get()
+int server::get()
 {
 
     if(m_gotFD){
@@ -84,7 +84,7 @@ int Server::get()
     return -1;
 }
 
-std::string Server::msg_get(){
+std::string server::msg_get(){
     std::string msg = buf;
     /*int i=0;
     while(i<4096||buf[i]!='\0')
@@ -95,7 +95,7 @@ std::string Server::msg_get(){
     return msg;
 }
 
-void Server::create_server()
+void server::create_server()
 {
 
     // Create a socket
@@ -128,7 +128,7 @@ void Server::create_server()
     listen(m_lstn, SOMAXCONN);
 }
 
-void Server::acpt_server()
+void server::acpt_server()
 {
     // Wait for a connection
     sockaddr_in client;

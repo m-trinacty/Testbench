@@ -7,8 +7,12 @@
 #include <sstream>
 #include <iomanip>
 
-
-std::string Logger::timestamp()
+/*!
+ * \brief logger::timestamp
+ * \details
+ * \return
+ */
+std::string logger::timestamp()
 {
     std::string logString;
     std::stringstream ss;
@@ -22,14 +26,14 @@ std::string Logger::timestamp()
     return logString;
 }
 
-std::string Logger::header()
+std::string logger::header()
 {
     std::string logString;
     logString = logString+ "TIME,POS_CIRCULAR,POS_ESTIMATE,POS_ESTIMATE_COUNTS,POS_INTURNS,IQMEASURED;"+"\n";
     return logString;
 }
 
-std::string Logger::get_time()
+std::string logger::get_time()
 {
 
     auto now=std::chrono::system_clock::now();
@@ -41,7 +45,7 @@ std::string Logger::get_time()
     return logString;
 }
 
-std::string Logger::get_timestamp()
+std::string logger::get_timestamp()
 {
 
     std::string time;
@@ -51,7 +55,7 @@ std::string Logger::get_timestamp()
     return time;
 }
 
-std::string Logger::create_rec(float posCircular, float posEstimate, float posEstimateCounts, float posInTurns, float iqMeasured)
+std::string logger::create_rec(float posCircular, float posEstimate, float posEstimateCounts, float posInTurns, float iqMeasured)
 {
     std::string record = ", "+std::to_string(posCircular)+", "+std::to_string(posEstimate)+", "+std::to_string(posEstimateCounts)+", "+std::to_string(posInTurns)+", "+std::to_string(iqMeasured)+";";
 

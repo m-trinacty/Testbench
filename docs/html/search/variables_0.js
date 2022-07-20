@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['buf_199',['buf',['../classServer.html#af8ddc3806587b6192cb17b5e4623ea61',1,'Server']]]
+  ['buf_197',['buf',['../classserver.html#ab1a3dd33679559be0cc54eea6d76aa11',1,'server']]]
 ];

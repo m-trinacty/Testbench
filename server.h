@@ -2,10 +2,10 @@
 #define SERVER_H
 #include <iostream>
 
-class Server
+class server
 {
 public:
-    Server(std::string ipAdress, int port){
+    server(std::string ipAdress, int port){
         m_ipAddr = &*ipAdress.begin();
         m_port = port;
     }

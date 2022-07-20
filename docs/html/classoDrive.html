@@ -23,6 +23,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ODrive library
    </div>
+   <div id="projectbrief">Library for controlling ODrive unit and motors written in C++ and store data from it</div>
   </td>
  </tr>
  </tbody>
@@ -79,6 +80,10 @@ $(function() {
 Collaboration diagram for oDrive:</div>
 <div class="dyncontent">
 <div class="center"><img src="classoDrive__coll__graph.png" border="0" usemap="#aoDrive_coll__map" alt="Collaboration graph"/></div>
+<map name="aoDrive_coll__map" id="aoDrive_coll__map">
+<area shape="rect" title="The oDrive class." alt="" coords="5,95,71,121"/>
+<area shape="rect" href="classport.html" title=" " alt="" coords="14,5,62,32"/>
+</map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -218,6 +223,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The axis_state enum. </p>
+<p>This enum defines states used in ODrive. Most of them are used in startup automatically AXIS_STATE_CLOSED_LOOP_CONTROL is then used during spin. Also AXIS_STATE_LOCKIN_SPIN can be used to spin motors </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7c2c6ad793642a6bef2f2f98356321a6a414b50829810a87cd45ebdcc137a5a20"></a>AXIS_STATE_UNDEFINED&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a7c2c6ad793642a6bef2f2f98356321a6a7ff2a132a37d589b80b25e73bcbf6148"></a>AXIS_STATE_IDLE&#160;</td><td class="fielddoc"><p>Idle state is default state after startup sequence </p>
@@ -237,37 +243,37 @@ Private Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="a7c2c6ad793642a6bef2f2f98356321a6a3610a426de1333b6c5ca4cf2894b4ef1"></a>AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="oDrive_8h_source.html#l00025">25</a> of file <a class="el" href="oDrive_8h_source.html">oDrive.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;                   {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a414b50829810a87cd45ebdcc137a5a20">AXIS_STATE_UNDEFINED</a>,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7ff2a132a37d589b80b25e73bcbf6148">AXIS_STATE_IDLE</a>,                                 </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a78f331058042aea153dafdb544465e59">AXIS_STATE_STARTUP_SEQUENCE</a>,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a1ca4363799caa2a7df566e24577a780c">AXIS_STATE_FULL_CALIBRATION_SEQUENCE</a>,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a6a831f8ffb3eddfe4b652af61a17366a">AXIS_STATE_MOTOR_CALIBRATION</a>,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6add95b8f138759c045d57029c71c4b451">AXIS_STATE_DUMMY_DO_NOT_USE</a>,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7844aac5d87cc38eecd4ebf445055df1">AXIS_STATE_ENCODER_INDEX_SEARCH</a>,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a32d41d3f1bb7cda95ebccdb71ab20426">AXIS_STATE_ENCODER_OFFSET_CALIBRATION</a>,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a71e316542dc420524391ade64857f4c3">AXIS_STATE_CLOSED_LOOP_CONTROL</a>,                 </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a9195cfec561e78580ffefec63ed631b2">AXIS_STATE_LOCKIN_SPIN</a>,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6afb5380700e7b0431c861f3434afceea2">AXIS_STATE_ENCODER_DIR_FIND</a>,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6ad68741f3cebab852b95441dd94d07a8e">AXIS_STATE_HOMING</a>,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a67e79d92cbb6392aa09f48a4f0fd7920">AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION</a>,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a3610a426de1333b6c5ca4cf2894b4ef1">AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    };</div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a1ca4363799caa2a7df566e24577a780c"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a1ca4363799caa2a7df566e24577a780c">oDrive::AXIS_STATE_FULL_CALIBRATION_SEQUENCE</a></div><div class="ttdeci">@ AXIS_STATE_FULL_CALIBRATION_SEQUENCE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00029">oDrive.h:29</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a32d41d3f1bb7cda95ebccdb71ab20426"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a32d41d3f1bb7cda95ebccdb71ab20426">oDrive::AXIS_STATE_ENCODER_OFFSET_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_OFFSET_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00033">oDrive.h:33</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a3610a426de1333b6c5ca4cf2894b4ef1"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a3610a426de1333b6c5ca4cf2894b4ef1">oDrive::AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00040">oDrive.h:39</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a414b50829810a87cd45ebdcc137a5a20"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a414b50829810a87cd45ebdcc137a5a20">oDrive::AXIS_STATE_UNDEFINED</a></div><div class="ttdeci">@ AXIS_STATE_UNDEFINED</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00026">oDrive.h:26</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a67e79d92cbb6392aa09f48a4f0fd7920"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a67e79d92cbb6392aa09f48a4f0fd7920">oDrive::AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00038">oDrive.h:38</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a6a831f8ffb3eddfe4b652af61a17366a"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a6a831f8ffb3eddfe4b652af61a17366a">oDrive::AXIS_STATE_MOTOR_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_MOTOR_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00030">oDrive.h:30</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a71e316542dc420524391ade64857f4c3"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a71e316542dc420524391ade64857f4c3">oDrive::AXIS_STATE_CLOSED_LOOP_CONTROL</a></div><div class="ttdeci">@ AXIS_STATE_CLOSED_LOOP_CONTROL</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00034">oDrive.h:34</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a7844aac5d87cc38eecd4ebf445055df1"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7844aac5d87cc38eecd4ebf445055df1">oDrive::AXIS_STATE_ENCODER_INDEX_SEARCH</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_INDEX_SEARCH</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00032">oDrive.h:32</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a78f331058042aea153dafdb544465e59"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a78f331058042aea153dafdb544465e59">oDrive::AXIS_STATE_STARTUP_SEQUENCE</a></div><div class="ttdeci">@ AXIS_STATE_STARTUP_SEQUENCE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00028">oDrive.h:28</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a7ff2a132a37d589b80b25e73bcbf6148"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7ff2a132a37d589b80b25e73bcbf6148">oDrive::AXIS_STATE_IDLE</a></div><div class="ttdeci">@ AXIS_STATE_IDLE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00027">oDrive.h:27</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a9195cfec561e78580ffefec63ed631b2"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a9195cfec561e78580ffefec63ed631b2">oDrive::AXIS_STATE_LOCKIN_SPIN</a></div><div class="ttdeci">@ AXIS_STATE_LOCKIN_SPIN</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00035">oDrive.h:35</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6ad68741f3cebab852b95441dd94d07a8e"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6ad68741f3cebab852b95441dd94d07a8e">oDrive::AXIS_STATE_HOMING</a></div><div class="ttdeci">@ AXIS_STATE_HOMING</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00037">oDrive.h:37</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6add95b8f138759c045d57029c71c4b451"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6add95b8f138759c045d57029c71c4b451">oDrive::AXIS_STATE_DUMMY_DO_NOT_USE</a></div><div class="ttdeci">@ AXIS_STATE_DUMMY_DO_NOT_USE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00031">oDrive.h:31</a></div></div>
-<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6afb5380700e7b0431c861f3434afceea2"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6afb5380700e7b0431c861f3434afceea2">oDrive::AXIS_STATE_ENCODER_DIR_FIND</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_DIR_FIND</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00036">oDrive.h:36</a></div></div>
+<p class="definition">Definition at line <a class="el" href="oDrive_8h_source.html#l00028">28</a> of file <a class="el" href="oDrive_8h_source.html">oDrive.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                   {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a414b50829810a87cd45ebdcc137a5a20">AXIS_STATE_UNDEFINED</a>,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7ff2a132a37d589b80b25e73bcbf6148">AXIS_STATE_IDLE</a>,                                 </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a78f331058042aea153dafdb544465e59">AXIS_STATE_STARTUP_SEQUENCE</a>,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a1ca4363799caa2a7df566e24577a780c">AXIS_STATE_FULL_CALIBRATION_SEQUENCE</a>,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a6a831f8ffb3eddfe4b652af61a17366a">AXIS_STATE_MOTOR_CALIBRATION</a>,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6add95b8f138759c045d57029c71c4b451">AXIS_STATE_DUMMY_DO_NOT_USE</a>,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7844aac5d87cc38eecd4ebf445055df1">AXIS_STATE_ENCODER_INDEX_SEARCH</a>,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a32d41d3f1bb7cda95ebccdb71ab20426">AXIS_STATE_ENCODER_OFFSET_CALIBRATION</a>,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a71e316542dc420524391ade64857f4c3">AXIS_STATE_CLOSED_LOOP_CONTROL</a>,                 </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a9195cfec561e78580ffefec63ed631b2">AXIS_STATE_LOCKIN_SPIN</a>,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6afb5380700e7b0431c861f3434afceea2">AXIS_STATE_ENCODER_DIR_FIND</a>,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6ad68741f3cebab852b95441dd94d07a8e">AXIS_STATE_HOMING</a>,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a67e79d92cbb6392aa09f48a4f0fd7920">AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION</a>,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a3610a426de1333b6c5ca4cf2894b4ef1">AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    };</div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a1ca4363799caa2a7df566e24577a780c"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a1ca4363799caa2a7df566e24577a780c">oDrive::AXIS_STATE_FULL_CALIBRATION_SEQUENCE</a></div><div class="ttdeci">@ AXIS_STATE_FULL_CALIBRATION_SEQUENCE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00032">oDrive.h:32</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a32d41d3f1bb7cda95ebccdb71ab20426"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a32d41d3f1bb7cda95ebccdb71ab20426">oDrive::AXIS_STATE_ENCODER_OFFSET_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_OFFSET_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00036">oDrive.h:36</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a3610a426de1333b6c5ca4cf2894b4ef1"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a3610a426de1333b6c5ca4cf2894b4ef1">oDrive::AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00043">oDrive.h:42</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a414b50829810a87cd45ebdcc137a5a20"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a414b50829810a87cd45ebdcc137a5a20">oDrive::AXIS_STATE_UNDEFINED</a></div><div class="ttdeci">@ AXIS_STATE_UNDEFINED</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00029">oDrive.h:29</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a67e79d92cbb6392aa09f48a4f0fd7920"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a67e79d92cbb6392aa09f48a4f0fd7920">oDrive::AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00041">oDrive.h:41</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a6a831f8ffb3eddfe4b652af61a17366a"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a6a831f8ffb3eddfe4b652af61a17366a">oDrive::AXIS_STATE_MOTOR_CALIBRATION</a></div><div class="ttdeci">@ AXIS_STATE_MOTOR_CALIBRATION</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00033">oDrive.h:33</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a71e316542dc420524391ade64857f4c3"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a71e316542dc420524391ade64857f4c3">oDrive::AXIS_STATE_CLOSED_LOOP_CONTROL</a></div><div class="ttdeci">@ AXIS_STATE_CLOSED_LOOP_CONTROL</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00037">oDrive.h:37</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a7844aac5d87cc38eecd4ebf445055df1"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7844aac5d87cc38eecd4ebf445055df1">oDrive::AXIS_STATE_ENCODER_INDEX_SEARCH</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_INDEX_SEARCH</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00035">oDrive.h:35</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a78f331058042aea153dafdb544465e59"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a78f331058042aea153dafdb544465e59">oDrive::AXIS_STATE_STARTUP_SEQUENCE</a></div><div class="ttdeci">@ AXIS_STATE_STARTUP_SEQUENCE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00031">oDrive.h:31</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a7ff2a132a37d589b80b25e73bcbf6148"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a7ff2a132a37d589b80b25e73bcbf6148">oDrive::AXIS_STATE_IDLE</a></div><div class="ttdeci">@ AXIS_STATE_IDLE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00030">oDrive.h:30</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6a9195cfec561e78580ffefec63ed631b2"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a9195cfec561e78580ffefec63ed631b2">oDrive::AXIS_STATE_LOCKIN_SPIN</a></div><div class="ttdeci">@ AXIS_STATE_LOCKIN_SPIN</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00038">oDrive.h:38</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6ad68741f3cebab852b95441dd94d07a8e"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6ad68741f3cebab852b95441dd94d07a8e">oDrive::AXIS_STATE_HOMING</a></div><div class="ttdeci">@ AXIS_STATE_HOMING</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00040">oDrive.h:40</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6add95b8f138759c045d57029c71c4b451"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6add95b8f138759c045d57029c71c4b451">oDrive::AXIS_STATE_DUMMY_DO_NOT_USE</a></div><div class="ttdeci">@ AXIS_STATE_DUMMY_DO_NOT_USE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00034">oDrive.h:34</a></div></div>
+<div class="ttc" id="aclassoDrive_html_a7c2c6ad793642a6bef2f2f98356321a6afb5380700e7b0431c861f3434afceea2"><div class="ttname"><a href="classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6afb5380700e7b0431c861f3434afceea2">oDrive::AXIS_STATE_ENCODER_DIR_FIND</a></div><div class="ttdeci">@ AXIS_STATE_ENCODER_DIR_FIND</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00039">oDrive.h:39</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -284,10 +290,12 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The input_mode enum. </p>
+<p>This enum defines input modes for user input to control ODrive. Most of them are used in startup or homing sequence and changed autamtically. INPUT_MODE_VEL_RAMP is used then by default to keep slow acceleration and decelleration/ </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab67151c18c417aeaefb3fb8f9bf0958daab19dadfd65942a0943671d57eb81bb5"></a>INPUT_MODE_INACTIVE&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab67151c18c417aeaefb3fb8f9bf0958da600467a4deca48e482afcfd73d24cb3b"></a>INPUT_MODE_PASSTHROUGH&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4"></a>INPUT_MODE_VEL_RAMP&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4"></a>INPUT_MODE_VEL_RAMP&#160;</td><td class="fielddoc"><p>Default used input mode, defined in configuration </p>
+</td></tr>
 <tr><td class="fieldname"><a id="ab67151c18c417aeaefb3fb8f9bf0958dae41367949bbb322704049e31ebc08860"></a>INPUT_MODE_POS_FILTER&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab67151c18c417aeaefb3fb8f9bf0958da332671e472c3e52ee9f2291b0ae95899"></a>INPUT_MODE_MIX_CHANNELS&#160;</td><td class="fielddoc"><p>According to Odrive not implemented </p>
 </td></tr>
@@ -297,27 +305,27 @@ Private Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="ab67151c18c417aeaefb3fb8f9bf0958dad9cc750a0d50b0d95ba7f5c6dd80335a"></a>INPUT_MODE_Tuning&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="oDrive_8h_source.html#l00044">44</a> of file <a class="el" href="oDrive_8h_source.html">oDrive.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                   {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958daab19dadfd65942a0943671d57eb81bb5">INPUT_MODE_INACTIVE</a>,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da600467a4deca48e482afcfd73d24cb3b">INPUT_MODE_PASSTHROUGH</a>,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4">INPUT_MODE_VEL_RAMP</a>,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dae41367949bbb322704049e31ebc08860">INPUT_MODE_POS_FILTER</a>,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da332671e472c3e52ee9f2291b0ae95899">INPUT_MODE_MIX_CHANNELS</a>,                        </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da7c0c894573d34c8d14c1527dae8cf9e1">INPUT_MODE_TRAP_TRAJ</a>,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dabc9e41c04c357c2fddba4a7f73c5638b">INPUT_MODE_TORQUE_RAMP</a>,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da810534b376b8c110afd0c8ee707cf6aa">INPUT_MODE_MIRROR</a>,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dad9cc750a0d50b0d95ba7f5c6dd80335a">INPUT_MODE_Tuning</a></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    };</div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da332671e472c3e52ee9f2291b0ae95899"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da332671e472c3e52ee9f2291b0ae95899">oDrive::INPUT_MODE_MIX_CHANNELS</a></div><div class="ttdeci">@ INPUT_MODE_MIX_CHANNELS</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00049">oDrive.h:49</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da600467a4deca48e482afcfd73d24cb3b"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da600467a4deca48e482afcfd73d24cb3b">oDrive::INPUT_MODE_PASSTHROUGH</a></div><div class="ttdeci">@ INPUT_MODE_PASSTHROUGH</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00046">oDrive.h:46</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da7c0c894573d34c8d14c1527dae8cf9e1"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da7c0c894573d34c8d14c1527dae8cf9e1">oDrive::INPUT_MODE_TRAP_TRAJ</a></div><div class="ttdeci">@ INPUT_MODE_TRAP_TRAJ</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00050">oDrive.h:50</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da810534b376b8c110afd0c8ee707cf6aa"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da810534b376b8c110afd0c8ee707cf6aa">oDrive::INPUT_MODE_MIRROR</a></div><div class="ttdeci">@ INPUT_MODE_MIRROR</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00052">oDrive.h:52</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958daab19dadfd65942a0943671d57eb81bb5"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958daab19dadfd65942a0943671d57eb81bb5">oDrive::INPUT_MODE_INACTIVE</a></div><div class="ttdeci">@ INPUT_MODE_INACTIVE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00045">oDrive.h:45</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dabc9e41c04c357c2fddba4a7f73c5638b"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dabc9e41c04c357c2fddba4a7f73c5638b">oDrive::INPUT_MODE_TORQUE_RAMP</a></div><div class="ttdeci">@ INPUT_MODE_TORQUE_RAMP</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00051">oDrive.h:51</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4">oDrive::INPUT_MODE_VEL_RAMP</a></div><div class="ttdeci">@ INPUT_MODE_VEL_RAMP</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00047">oDrive.h:47</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dad9cc750a0d50b0d95ba7f5c6dd80335a"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dad9cc750a0d50b0d95ba7f5c6dd80335a">oDrive::INPUT_MODE_Tuning</a></div><div class="ttdeci">@ INPUT_MODE_Tuning</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00054">oDrive.h:53</a></div></div>
-<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dae41367949bbb322704049e31ebc08860"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dae41367949bbb322704049e31ebc08860">oDrive::INPUT_MODE_POS_FILTER</a></div><div class="ttdeci">@ INPUT_MODE_POS_FILTER</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00048">oDrive.h:48</a></div></div>
+<p class="definition">Definition at line <a class="el" href="oDrive_8h_source.html#l00049">49</a> of file <a class="el" href="oDrive_8h_source.html">oDrive.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                   {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958daab19dadfd65942a0943671d57eb81bb5">INPUT_MODE_INACTIVE</a>,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da600467a4deca48e482afcfd73d24cb3b">INPUT_MODE_PASSTHROUGH</a>,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4">INPUT_MODE_VEL_RAMP</a>,                            </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dae41367949bbb322704049e31ebc08860">INPUT_MODE_POS_FILTER</a>,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da332671e472c3e52ee9f2291b0ae95899">INPUT_MODE_MIX_CHANNELS</a>,                        </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da7c0c894573d34c8d14c1527dae8cf9e1">INPUT_MODE_TRAP_TRAJ</a>,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dabc9e41c04c357c2fddba4a7f73c5638b">INPUT_MODE_TORQUE_RAMP</a>,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da810534b376b8c110afd0c8ee707cf6aa">INPUT_MODE_MIRROR</a>,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <a class="code" href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dad9cc750a0d50b0d95ba7f5c6dd80335a">INPUT_MODE_Tuning</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    };</div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da332671e472c3e52ee9f2291b0ae95899"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da332671e472c3e52ee9f2291b0ae95899">oDrive::INPUT_MODE_MIX_CHANNELS</a></div><div class="ttdeci">@ INPUT_MODE_MIX_CHANNELS</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00054">oDrive.h:54</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da600467a4deca48e482afcfd73d24cb3b"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da600467a4deca48e482afcfd73d24cb3b">oDrive::INPUT_MODE_PASSTHROUGH</a></div><div class="ttdeci">@ INPUT_MODE_PASSTHROUGH</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00051">oDrive.h:51</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da7c0c894573d34c8d14c1527dae8cf9e1"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da7c0c894573d34c8d14c1527dae8cf9e1">oDrive::INPUT_MODE_TRAP_TRAJ</a></div><div class="ttdeci">@ INPUT_MODE_TRAP_TRAJ</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00055">oDrive.h:55</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958da810534b376b8c110afd0c8ee707cf6aa"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958da810534b376b8c110afd0c8ee707cf6aa">oDrive::INPUT_MODE_MIRROR</a></div><div class="ttdeci">@ INPUT_MODE_MIRROR</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00057">oDrive.h:57</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958daab19dadfd65942a0943671d57eb81bb5"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958daab19dadfd65942a0943671d57eb81bb5">oDrive::INPUT_MODE_INACTIVE</a></div><div class="ttdeci">@ INPUT_MODE_INACTIVE</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00050">oDrive.h:50</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dabc9e41c04c357c2fddba4a7f73c5638b"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dabc9e41c04c357c2fddba4a7f73c5638b">oDrive::INPUT_MODE_TORQUE_RAMP</a></div><div class="ttdeci">@ INPUT_MODE_TORQUE_RAMP</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00056">oDrive.h:56</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dac38011144e73a8250e0a4ab59df48be4">oDrive::INPUT_MODE_VEL_RAMP</a></div><div class="ttdeci">@ INPUT_MODE_VEL_RAMP</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00052">oDrive.h:52</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dad9cc750a0d50b0d95ba7f5c6dd80335a"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dad9cc750a0d50b0d95ba7f5c6dd80335a">oDrive::INPUT_MODE_Tuning</a></div><div class="ttdeci">@ INPUT_MODE_Tuning</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00059">oDrive.h:58</a></div></div>
+<div class="ttc" id="aclassoDrive_html_ab67151c18c417aeaefb3fb8f9bf0958dae41367949bbb322704049e31ebc08860"><div class="ttname"><a href="classoDrive.html#ab67151c18c417aeaefb3fb8f9bf0958dae41367949bbb322704049e31ebc08860">oDrive::INPUT_MODE_POS_FILTER</a></div><div class="ttdeci">@ INPUT_MODE_POS_FILTER</div><div class="ttdef"><b>Definition:</b> <a href="oDrive_8h_source.html#l00053">oDrive.h:53</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -341,7 +349,7 @@ Private Attributes</h2></td></tr>
 <p><a class="el" href="classoDrive.html#a352370e27b560f0b602d5acfc1bcad68" title="oDrive::oDrive">oDrive::oDrive</a> </p>
 <p>Constructor injecting name of port, where is ODrive connected </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">port_name</td><td>string Name of port where is ODrive connected </td></tr>
+    <tr><td class="paramname">port_name</td><td>Name of port where is ODrive connected </td></tr>
   </table>
   </dd>
 </dl>
@@ -409,7 +417,7 @@ Private Attributes</h2></td></tr>
 <p>Functions remove errors arised on ODrive unit, f.e. when endstop is hit. This function allows removing this error and continue working with ODrive</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis is not used here, but needed to work, otherwise command will fail </td></tr>
+    <tr><td class="paramname">axis</td><td>Axis is not used here, but needed to work, otherwise command will fail </td></tr>
   </table>
   </dd>
 </dl>
@@ -528,7 +536,7 @@ Private Attributes</h2></td></tr>
 <p><a class="el" href="classoDrive.html#a680b9d0c0294ce6ee29173b7247dfd78" title="oDrive::get_axis_state">oDrive::get_axis_state</a> </p>
 <p>Function return actual state of selected axis </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis, from which is state returned</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis, from which is state returned</td></tr>
   </table>
   </dd>
 </dl>
@@ -586,7 +594,7 @@ Private Attributes</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Not used in application</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis is not used here, but needed to work, otherwise command will fail</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis is not used here, but needed to work, otherwise command will fail</td></tr>
   </table>
   </dd>
 </dl>
@@ -639,7 +647,7 @@ Private Attributes</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Used in application to determine limits of maximal current and speed</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor where Iq current is measured</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor where Iq current is measured</td></tr>
   </table>
   </dd>
 </dl>
@@ -691,7 +699,7 @@ Private Attributes</h2></td></tr>
 <p>Function return locking velocity in rps, which stands for rotation per second of motor, lockin velocity is used with AXIS_STATE_LOCKIN_SPIN state </p><dl class="section note"><dt>Note</dt><dd>AXIS_STATE_LOCKIN_SPIN is not usually used</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, from which lockin velocity needs to be determined</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, from which lockin velocity needs to be determined</td></tr>
   </table>
   </dd>
 </dl>
@@ -747,7 +755,7 @@ Private Attributes</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Used to determine if slowly spining motor hits minimal endstop</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Determine axis with motor, connected with minimal endstop</td></tr>
+    <tr><td class="paramname">axis</td><td>Determine axis with motor, connected with minimal endstop</td></tr>
   </table>
   </dd>
 </dl>
@@ -799,7 +807,7 @@ Private Attributes</h2></td></tr>
 <p><a class="el" href="classoDrive.html#afaf43872b078dd11488b10035bea0740" title="oDrive::get_pos_cir">oDrive::get_pos_cir</a> </p>
 <p>Function returns circular position estimate of the encoder, as a decimal from [0, 1). One turn of motor. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis, on which is motor connected and its position should be returned</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis, on which is motor connected and its position should be returned</td></tr>
   </table>
   </dd>
 </dl>
@@ -851,7 +859,7 @@ Private Attributes</h2></td></tr>
 <p><a class="el" href="classoDrive.html#a1bcda0589ac37fe0ba74b15c6145820f" title="oDrive::get_pos_cpr_cnt">oDrive::get_pos_cpr_cnt</a> </p>
 <p>Function returns circular position estimate of the encoder, on the space [0, cpr). CPR stands for counts per revolution, by default it is set to 8192 </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis, on which is motor connected and its position should be returned</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis, on which is motor connected and its position should be returned</td></tr>
   </table>
   </dd>
 </dl>
@@ -903,7 +911,7 @@ Private Attributes</h2></td></tr>
 <p><a class="el" href="classoDrive.html#a92929ab141c53d9a0d320bdc21c4b113" title="oDrive::get_pos_est">oDrive::get_pos_est</a> </p>
 <p>Function returns linear position estimate of the encoder, in turns. Also known as “multi-turn” position. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis, on which is motor connected and its position should be returned</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis, on which is motor connected and its position should be returned</td></tr>
   </table>
   </dd>
 </dl>
@@ -955,7 +963,7 @@ Private Attributes</h2></td></tr>
 <p><a class="el" href="classoDrive.html#a6cf9b7a118d746b2eb78ebd33269bfa8" title="oDrive::get_pos_est_cnt">oDrive::get_pos_est_cnt</a> </p>
 <p>Function returns linear position estimate of the encoder, in counts. Equal to pos_estimate * cpr(set on encoder, default 8192) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis, on which is motor connected and its position should be returned</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis, on which is motor connected and its position should be returned</td></tr>
   </table>
   </dd>
 </dl>
@@ -1010,11 +1018,11 @@ Private Attributes</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Function parse feedback a outputs only postion</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis, on which is motor connected and its feedback is requested</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis, on which is motor connected and its feedback is requested</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>pos float Position in turns</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Function return position in turns</dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">pos</td><td>float position in turns </td></tr>
@@ -1066,7 +1074,7 @@ Private Attributes</h2></td></tr>
 <p>Function return locking velocity in rps, which stands for rotation per second of motor. This parameter determines velocity with INPUT_MODE_VEL_RAMP input mode and AXIS_STATE_CLOSED_LOOP_CONTROL</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, from which velocity needs to be determined</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, from which velocity needs to be determined</td></tr>
   </table>
   </dd>
 </dl>
@@ -1121,11 +1129,11 @@ Private Attributes</h2></td></tr>
 <p>Function search for base position defined by placed endstop switch.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, on which motor should be homed. </td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, on which motor should be homed. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Function is void type, so id does not return anything </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="oDrive_8cpp_source.html#l00616">616</a> of file <a class="el" href="oDrive_8cpp_source.html">oDrive.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;{</div>
@@ -1177,8 +1185,8 @@ Private Attributes</h2></td></tr>
 <p>Function sets state of axis, which determines motors behavior, state should be selected from enum axis_state f.e. AXIS_STATE_CLOSED_LOOP_CONTROL(8) is used when motor spins.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, on which is state set </td></tr>
-    <tr><td class="paramname">state</td><td>int Number corresponding with state</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, on which is state set </td></tr>
+    <tr><td class="paramname">state</td><td>Number corresponding with state</td></tr>
   </table>
   </dd>
 </dl>
@@ -1234,8 +1242,8 @@ Private Attributes</h2></td></tr>
 <p>Input mode define the way ODrive unit and motors are controlled, modes should be selected from enum input_mode</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, on which is control mode set </td></tr>
-    <tr><td class="paramname">mode</td><td>int Number corresponding with control mode </td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, on which is control mode set </td></tr>
+    <tr><td class="paramname">mode</td><td>Number corresponding with control mode </td></tr>
   </table>
   </dd>
 </dl>
@@ -1291,8 +1299,8 @@ Private Attributes</h2></td></tr>
 <p>Function sets velocity in rps, which stands for rotation per second of motor, lockin velocity is used to determine velocity when AXIS_STATE_LOCKIN_SPIN is used </p><dl class="section note"><dt>Note</dt><dd>AXIS_STATE_LOCKIN_SPIN is not usually used</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, on which is velocity is set </td></tr>
-    <tr><td class="paramname">vel</td><td>float Velocity in rps, when negative, motor spins in other direction</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, on which is velocity is set </td></tr>
+    <tr><td class="paramname">vel</td><td>Velocity in rps, when negative, motor spins in other direction</td></tr>
   </table>
   </dd>
 </dl>
@@ -1349,8 +1357,8 @@ Private Attributes</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>This function is used in initial homing sequence before spining, after homing its disabled to allow spining</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Determine axis with motor, connected with minimal endstop </td></tr>
-    <tr><td class="paramname">enabled</td><td>bool Parameter enable(true) or disable minimal endstop</td></tr>
+    <tr><td class="paramname">axis</td><td>Determine axis with motor, connected with minimal endstop </td></tr>
+    <tr><td class="paramname">enabled</td><td>Parameter enable(true) or disable minimal endstop</td></tr>
   </table>
   </dd>
 </dl>
@@ -1408,8 +1416,8 @@ Private Attributes</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Used with position oriented input and control modes .</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, on which is velocity is set </td></tr>
-    <tr><td class="paramname">pos</td><td>float Position in turns</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, on which is velocity is set </td></tr>
+    <tr><td class="paramname">pos</td><td>Position in turns</td></tr>
   </table>
   </dd>
 </dl>
@@ -1466,8 +1474,8 @@ Private Attributes</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Used with position oriented input and control modes .</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, on which is position is set </td></tr>
-    <tr><td class="paramname">pos</td><td>float Position of turns</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, on which is position is set </td></tr>
+    <tr><td class="paramname">pos</td><td>Position of turns</td></tr>
   </table>
   </dd>
 </dl>
@@ -1525,8 +1533,8 @@ Private Attributes</h2></td></tr>
 <p>Function sets velocity in rps, which stands for rotation per second of motor </p><dl class="section note"><dt>Note</dt><dd>Motor can do around 20 rps with load of testbench</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">axis</td><td>int Axis of motor, on which is velocity is set </td></tr>
-    <tr><td class="paramname">vel</td><td>float Velocity in rps, when negative, motor spins in other direction</td></tr>
+    <tr><td class="paramname">axis</td><td>Axis of motor, on which is velocity is set </td></tr>
+    <tr><td class="paramname">vel</td><td>Velocity in rps, when negative, motor spins in other direction</td></tr>
   </table>
   </dd>
 </dl>
@@ -1572,6 +1580,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>File descriptor of port to which is ODrive connected </p>
 
 <p class="definition">Definition at line <a class="el" href="oDrive_8h_source.html#l00020">20</a> of file <a class="el" href="oDrive_8h_source.html">oDrive.h</a>.</p>
 

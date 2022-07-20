@@ -17,10 +17,13 @@
  */
 class oDrive {
 private:
-    port * m_oDrive_port;
+    port * m_oDrive_port;   /*!<File descriptor of port to which is ODrive connected*/
 public:
     /*!
      * \brief The axis_state enum
+     * \details This enum defines states used in ODrive. Most of them are used in startup automatically
+     *          AXIS_STATE_CLOSED_LOOP_CONTROL is then used during spin. Also AXIS_STATE_LOCKIN_SPIN can be
+     *          used to spin motors
      */
     enum axis_state{
         AXIS_STATE_UNDEFINED,
@@ -40,11 +43,13 @@ public:
     };
     /*!
      * \brief The input_mode enum
+     * \details This enum defines input modes for user input to control ODrive. Most of them are used in startup  or homing
+     *          sequence and changed autamtically. INPUT_MODE_VEL_RAMP is used then by default to keep slow acceleration and decelleration/
      */
     enum input_mode{
         INPUT_MODE_INACTIVE,
         INPUT_MODE_PASSTHROUGH,
-        INPUT_MODE_VEL_RAMP,
+        INPUT_MODE_VEL_RAMP,                            /*!<Default used input mode, defined in configuration*/
         INPUT_MODE_POS_FILTER,
         INPUT_MODE_MIX_CHANNELS,                        /*!<According to Odrive not implemented*/
         INPUT_MODE_TRAP_TRAJ,

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['acpt_5fserver_0',['acpt_server',['../classServer.html#af8b6da484cdfe3f2cace12d83ef3326c',1,'Server']]],
+  ['acpt_5fserver_0',['acpt_server',['../classserver.html#a7653c6f13c6564a29d9f1456250b2367',1,'server']]],
   ['axis_5fstate_1',['axis_state',['../classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6',1,'oDrive']]],
   ['axis_5fstate_5fclosed_5floop_5fcontrol_2',['AXIS_STATE_CLOSED_LOOP_CONTROL',['../classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6a71e316542dc420524391ade64857f4c3',1,'oDrive']]],
   ['axis_5fstate_5fdummy_5fdo_5fnot_5fuse_3',['AXIS_STATE_DUMMY_DO_NOT_USE',['../classoDrive.html#a7c2c6ad793642a6bef2f2f98356321a6add95b8f138759c045d57029c71c4b451',1,'oDrive']]],

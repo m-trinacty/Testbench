@@ -14,12 +14,16 @@
 #include <bits/stdc++.h>
 #include <vector>
 
-Helper::Helper()
-{
 
-}
-
-bool Helper::check_num(char *number)
+/*!
+ * \brief       helper::check_num
+ * \details     Function is checking if parameter passed in is number or not.
+ * \param       number    Char array to check
+ * \return      Function return bool value indicating if passed parameter is number.
+ * \retval      true   Indicating that parameter is number
+ * \retval      false  Indicating that parameter is not number
+ */
+bool helper::check_num(char *number)
 {
     std::string s = number;
     std::string::const_iterator it = s.begin();
@@ -30,8 +34,15 @@ bool Helper::check_num(char *number)
     return !s.empty() && it == s.end();
 
 }
-
-bool Helper::check_num(std::string number)
+/*!
+ * \brief       helper::check_num
+ * \details     Function is checking if parameter passed in is number or not.
+ * \param       number    String to check
+ * \return      Function return bool value indicating if passed parameter is number.
+ * \retval      true   Indicating that parameter is number
+ * \retval      false  Indicating that parameter is not number
+ */
+bool helper::check_num(std::string number)
 {
 
     std::string::const_iterator it = number.begin();
@@ -41,14 +52,29 @@ bool Helper::check_num(std::string number)
     }
     return !number.empty() && it == number.end();
 }
-
-bool Helper::check_file(const std::string &name)
+/*!
+ * \brief       helper::check_file
+ * \details     This function chcecks if file with given name is already existing
+ * \note        Used for checking if log(for testbench data) file is already existing
+ * \param       name File name to check
+ * \return      Function return bool value indicating if file exist or not.
+ * \retval      true File is existing
+ * \retval      false File is not existing
+ */
+bool helper::check_file(const std::string &name)
 {
     struct stat buffer;
     return (stat (name.c_str(), &buffer) == 0);
 }
 
-std::vector<std::string> Helper::split_str(std::string str)
+/*!
+ * \brief       helper::split_str
+ * \details     This function split by space given string into single words
+ * \param       str String to split
+ * \return      String vector with words included in parameter str
+ */
+
+std::vector<std::string> helper::split_str(std::string str)
 {
     std::stringstream ss(str);
     std::string word;
@@ -61,10 +87,14 @@ std::vector<std::string> Helper::split_str(std::string str)
 }
 
 
-int Helper::pid_fd=-1;
-char *Helper::pid_file_name=NULL;
-
-void Helper::daemonize()
+int helper::pid_fd=-1;  /*!< Process file descriptor*/
+char *helper::pid_file_name=NULL;   /*!< Process file name*/
+/*!
+ * \brief   helper::daemonize
+ * \details Function fork of started process and does basic configuration of process
+ *          to run it as daemon
+ */
+void helper::daemonize()
 {
     pid_t pid = 0;
     int fd;
@@ -146,8 +176,11 @@ void Helper::daemonize()
         write(pid_fd, str, strlen(str));
     }
 }
-
-void Helper::cfg_syslog()
+/*!
+ * \brief   helper::cfg_syslog
+ * \details This function sets log file for loggin information and error from program
+ */
+void helper::cfg_syslog()
 {
     openlog("TevogsTestbench", LOG_PID|LOG_CONS|LOG_NDELAY, LOG_USER);
 }

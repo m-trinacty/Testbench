@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['timestamp_119',['timestamp',['../classLogger.html#a6fa5f5096e9bc731841e4fc389db3402',1,'Logger']]]
+  ['timestamp_119',['timestamp',['../classlogger.html#afc3ecb4342b462cf9c55a82cd1e9ee3f',1,'logger']]]
 ];
