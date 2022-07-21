@@ -9,7 +9,7 @@
 #define EXTENSION ".log"
 /*!
  * \brief The logger class
- * \details Logger class provides functions for unified loging data
+ * \details Logger class provides functions for unified formatting data
  *          observed from ODrive.
  */
 class logger

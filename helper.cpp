@@ -178,7 +178,8 @@ void helper::daemonize()
 }
 /*!
  * \brief   helper::cfg_syslog
- * \details This function sets log file for loggin information and error from program
+ * \details This function sets log file for loggin information and error from program. Name of the file is
+ *          TevogsTestbench and log file is located in /var/log
  */
 void helper::cfg_syslog()
 {

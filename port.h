@@ -12,18 +12,24 @@
 #ifndef PORT_H_
 #define PORT_H_
 
-
+/*!
+ * \brief The port class
+ * \details This class provides functions to work with ports. Constructors builds connection with
+ *          port user code can then use only RW functions. Configuration is predefined for connection
+ *          with ODrive.
+ */
 class port {
 
 private:
-    std::string m_port_name;
-    struct termios port_cfg;
+    std::string m_port_name;    /*!< Private member with port name*/
+    struct termios m_port_cfg;    /*!< Private member with port settings*/
 
-    int m_serial_port;
+    int m_serial_port;            /*!< Private member with port file descriptor*/
+
     int open_port(std::string port_name);
     int close_port();
     int set_port_attribs(int fd, int speed, int parity);
-    void set_port_block(int fd, int shouldBlock);
+    int set_port_block(int fd, int shouldBlock);
     std::string char_arr_to_string(char * text,int size);
 public:
 	port();
