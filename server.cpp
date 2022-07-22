@@ -13,13 +13,28 @@
 #include <memory>
 
 
-
+/*!
+ * \brief server::conn_server
+ *
+ * \details Function makes connection after Server object is intialized. It uses template pattern
+ *          to ensure correct order of function call
+ */
 void server::conn_server()
 {
-    create_server();
-    acpt_server();
-}
+    if((m_ipAddr && !m_ipAddr[0])&& m_port>0){
+        create_server();
+        acpt_server();
+    }
+    else{
 
+        syslog(LOG_ERR,"Cant create connection",errno);
+    }
+}
+/*!
+ * \brief server::dconn_server
+ *
+ * \details Function for disconnecting from client. Function simply use system call close() to close client socket
+ */
 void server::dconn_server()
 {
     // Close the socket
@@ -27,15 +42,23 @@ void server::dconn_server()
     {
 
         syslog(LOG_ERR,"Cant close connection! Quitting",errno);
-        //std::cerr << "Cant close connection! Quitting" << std::endl;
         exit(EXIT_FAILURE);
     }
     else{
-        //shutdown(m_clientSocket, SHUT_WR);
         close(m_cliSock);
     }
 }
-
+/*!
+ * \brief   server::handler_msg
+ *
+ * \details Function for handling incoming messages with recv() system call. Message is then stored to
+ *          buffer, from which can be extracted by std::get_msg().
+ *
+ * \return  Function return status code
+ *
+ * \retval  EXIT_FAILURE    Error in recieving or Client disconnected
+ * \retval  EXIT_SUCCESS    Function executed successfully
+ */
 int server::handler_msg()
 {
 
@@ -43,58 +66,85 @@ int server::handler_msg()
     memset(buf, 0, 4096);
 
     // Wait for client to send data
-    int bytesRcv = recv(m_cliSock, buf, 4096, 0);
-    if (bytesRcv == -1)
+    int bytes_recv = recv(m_cliSock, buf, 4096, 0);
+    if (bytes_recv == -1)
     {
 
         syslog(LOG_ERR,"Error in recv(). Quitting",errno);
-        //std::cerr << "Error in recv(). Quitting" << std::endl;
-        return 0;
+        return EXIT_FAILURE;
     }
 
-    if (bytesRcv == 0)
+    if (bytes_recv == 0)
     {
 
         syslog(LOG_INFO,"Client Disconnected",errno);
-        return 0;
+        return EXIT_FAILURE;
     }
-
-    //std::cout << std::string(buf, 0, bytesRcv) << std::endl;
-
-    // Echo message back to client
-    //send(m_clientSocket, buf, bytesReceived + 1, 0);
-    return 1;
+    return EXIT_SUCCESS;
 }
-
-int server::send_msg(std::string message)
+/*!
+ * \brief   server::send_msg
+ *
+ * \details Function for sending messages to connected client.
+ *
+ * \param   msg String message that has to be sent.
+ *
+ * \return  Function return status code
+ *
+ * \retval  EXIT_FAILURE    Error while sending or Client disconnected
+ * \retval  EXIT_SUCCESS    Function executed successfully
+ */
+int server::send_msg(std::string msg)
 {
 
     memset(buf, 0, 4096);
-    strcpy(buf,message.c_str());
-    send(m_cliSock, buf,message.length() + 1, 0);
-    return 1;
-}
+    strcpy(buf,msg.c_str());
+    int bytes_sent = send(m_cliSock, buf,msg.length() + 1, 0);
+    if (bytes_sent == -1)
+    {
 
+        syslog(LOG_ERR,"Error in send(). Quitting",errno);
+        return EXIT_FAILURE;
+    }
+
+    if (bytes_sent == 0)
+    {
+
+        syslog(LOG_INFO,"Client Disconnected",errno);
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+}
+/*!
+ * \brief   server::get
+ * \details Functiont return file descriptor of client socket
+ * \return  File descriptor or negative status code
+ * \retval  File descriptor
+ * \retval  -EXIT_FAILURE
+ */
 int server::get()
 {
 
     if(m_gotFD){
         return m_cliSock;
     }
-    return -1;
+    return -EXIT_FAILURE;
 }
-
-std::string server::msg_get(){
+/*!
+ * \brief   server::get_msg
+ * \details Function for observing message from char array buffer
+ * \return  String message
+ */
+std::string server::get_msg(){
     std::string msg = buf;
-    /*int i=0;
-    while(i<4096||buf[i]!='\0')
-    {
-        msg=msg+buf[i];
-    }*/
 
     return msg;
 }
-
+/*!
+ * \brief   server::create_server
+ * \details Private function creates socket based on port and IP adress for communication.
+ *          Also sets basic configuration. TCP Socket is available immeadiately after disconnection.
+ */
 void server::create_server()
 {
 
@@ -127,7 +177,11 @@ void server::create_server()
     // Tell Winsock the socket is for listening
     listen(m_lstn, SOMAXCONN);
 }
-
+/*!
+ * \brief   server::acpt_server
+ * \details This function waits for client to connect to listening server on device controlling ODrive.
+ *          Needs to be called after server::create_server()
+ */
 void server::acpt_server()
 {
     // Wait for a connection

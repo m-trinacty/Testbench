@@ -1,7 +1,12 @@
 #ifndef SERVER_H
 #define SERVER_H
 #include <iostream>
-
+/*!
+ * \brief   The server class
+ * \details Class for server communication between device controlling ODrive and Controll station.
+ *          Provided functions offers creating Socket connection on IP adress of device, and then handling
+ *          coming messages and sending messages
+ */
 class server
 {
 public:
@@ -15,18 +20,18 @@ public:
     int handler_msg();
     int send_msg(std::string message);
     int get();
-    std::string msg_get();
+    std::string get_msg();
 private:
 
     void create_server();
     void acpt_server();
 
-    char buf[4096];
-    char* m_ipAddr;
-    int m_port;
-    int m_lstn;
-    int m_cliSock;
-    bool m_gotFD=false;
+    char buf[4096];     /*!<Char array as buffer for incoming messages*/
+    char* m_ipAddr;     /*!<Char array for storing IP Addres*/
+    int m_port;         /*!<Private member for storing port number*/
+    int m_lstn;         /*!<Private member of File descriptor for listenning socket*/
+    int m_cliSock;      /*!<Private member of File descriptor for client socket */
+    bool m_gotFD=false; /*!<Bool value representing if File descriptor of client socket was properly set*/
 };
 
 #endif // SERVER_H
