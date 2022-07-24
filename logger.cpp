@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) Aero4TE, s.r.o. - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
 #include "logger.h"
 
 #include <fstream>
@@ -66,7 +72,6 @@ std::string logger::get_timestamp()
 {
 
     std::string time;
-    //uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     std::time_t timeStamp = std::time(nullptr);
     time = timeStamp;
     return time;

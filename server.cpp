@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) Aero4TE, s.r.o. - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
 #include "server.h"
 #include <iostream>
 
@@ -37,7 +42,6 @@ void server::conn_server()
  */
 void server::dconn_server()
 {
-    // Close the socket
     if(m_cliSock==-1)
     {
 
@@ -65,7 +69,7 @@ int server::handler_msg()
 
     memset(buf, 0, 4096);
 
-    // Wait for client to send data
+    /** Wait for client to send data*/
     int bytes_recv = recv(m_cliSock, buf, 4096, 0);
     if (bytes_recv == -1)
     {
@@ -148,7 +152,7 @@ std::string server::get_msg(){
 void server::create_server()
 {
 
-    // Create a socket
+    /** Create a socket*/
     m_lstn = socket(AF_INET, SOCK_STREAM, 0);
 
     if (m_lstn == -1)
@@ -166,7 +170,7 @@ void server::create_server()
         exit(EXIT_FAILURE);
     }
 
-    // Bind the ip address and port to a socket
+    /** Bind the ip address and port to a socket*/
     sockaddr_in hint;
     hint.sin_family = AF_INET;
     hint.sin_port = htons(m_port);
@@ -174,7 +178,7 @@ void server::create_server()
 
     bind(m_lstn, (sockaddr*)&hint, sizeof(hint));
 
-    // Tell Winsock the socket is for listening
+    /** Tell Linux the socket is for listening*/
     listen(m_lstn, SOMAXCONN);
 }
 /*!
@@ -198,25 +202,23 @@ void server::acpt_server()
 
     m_gotFD=true;
 
-    char host[NI_MAXHOST];      // Client's remote name
-    char service[NI_MAXSERV];   // Service (i.e. port) the client is connect on
+    char host[NI_MAXHOST];      /** Client's remote name*/
+    char service[NI_MAXSERV];   /** Service (i.e. port) the client is connect on*/
 
-    memset(host, 0, NI_MAXHOST); // same as memset(host, 0, NI_MAXHOST);
+    memset(host, 0, NI_MAXHOST); /** same as memset(host, 0, NI_MAXHOST);*/
     memset(service, 0, NI_MAXSERV);
 
     if (getnameinfo((sockaddr*)&client, sizeof(client), host, NI_MAXHOST, service, NI_MAXSERV, 0) == 0)
     {
         syslog(LOG_INFO,"%s connected on port %s",host,service);
-        //std::cout << host << " connected on port " << service << std::endl;
     }
     else
     {
         inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
 
         syslog(LOG_INFO,"%s connected on port %d",host,ntohs(client.sin_port));
-        //std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
     }
-    // Close listening socket
+    /** Close listening socket*/
     close(m_lstn);
 
 }

@@ -10,15 +10,13 @@
 #include <string>
 
 
-// C library headers
 #include <stdio.h>
 #include <stdlib.h>
 
-// Linux headers
-#include <fcntl.h> // Contains file controls like O_RDWR
-#include <errno.h> // Error integer and strerror() function
-#include <termios.h> // Contains POSIX terminal control definitions
-#include <unistd.h> // write(), read(), close()
+#include <fcntl.h>
+#include <errno.h>
+#include <termios.h>
+#include <unistd.h>
 #include <syslog.h>
 /*!
  * \brief port::port
@@ -26,7 +24,7 @@
  *          set to invalid value, and needs to be set with port::set_port
  */
 port::port() {
-    m_serial_port=-1;   /*!<Sets port file descriptor to invalid value*/
+    m_serial_port=-1;   /*!< Sets port file descriptor to invalid value*/
 }
 /*!
  * \brief   port::port
@@ -51,35 +49,35 @@ port::port(std::string portName){
  */
 int port::set_port_attribs(int fd, int speed, int parity){
 	struct termios tty;
-    if (tcgetattr (fd, &tty) != 0){                         /*!<Getting basic attributes from opened port*/
+    if (tcgetattr (fd, &tty) != 0){                         /** Getting basic attributes from opened port*/
         syslog(LOG_ERR,"Error %d from tcgetattr  ",errno);
 
         return EXIT_FAILURE;
 	}
 
-    cfsetospeed (&tty, speed);          /*!<Setting speed*/
+    cfsetospeed (&tty, speed);          /** Setting speed*/
 	cfsetispeed (&tty, speed);
 
-    tty.c_cflag = (m_port_cfg.c_cflag & ~CSIZE) | CS8;     // 8-bit chars
-	// disable IGNBRK for mismatched speed tests; otherwise receive break
-	// as \000 chars
-	tty.c_iflag &= ~IGNBRK;         // disable break processing
-	tty.c_lflag = 0;                // no signaling chars, no echo,
-	                                        // no canonical processing
-	tty.c_oflag = 0;                // no remapping, no delays
-	tty.c_cc[VMIN]  = 0;            // read doesn't block
-	tty.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
+    tty.c_cflag = (m_port_cfg.c_cflag & ~CSIZE) | CS8;     /** 8-bit chars*/
+    /** disable IGNBRK for mismatched speed tests; otherwise receive break*/
+    /** as \000 chars*/
+    tty.c_iflag &= ~IGNBRK;         /** disable break processing*/
+    tty.c_lflag = 0;                /** no signaling chars, no echo,
+                                             no canonical processing*/
+    tty.c_oflag = 0;                /** no remapping, no delays*/
+    tty.c_cc[VMIN]  = 0;            /** read doesn't block*/
+    tty.c_cc[VTIME] = 5;            /** 0.5 seconds read timeout*/
 
-	tty.c_iflag &= ~(IXON | IXOFF | IXANY); // shut off xon/xoff ctrl
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY); /** shut off xon/xoff ctrl*/
 
-	tty.c_cflag |= (CLOCAL | CREAD);// ignore modem controls,
-	                                        // enable reading
-	tty.c_cflag &= ~(PARENB | PARODD);      // shut off parity
+    tty.c_cflag |= (CLOCAL | CREAD);/** ignore modem controls,*/
+                                            /** enable reading*/
+    tty.c_cflag &= ~(PARENB | PARODD);      /** shut off parity*/
 	tty.c_cflag |= parity;
 	tty.c_cflag &= ~CSTOPB;
 	tty.c_cflag &= ~CRTSCTS;
 
-    if (tcsetattr (fd, TCSANOW, &tty) != 0){        /*!< Saving updated attributes*/
+    if (tcsetattr (fd, TCSANOW, &tty) != 0){        /** Saving updated attributes*/
         syslog(LOG_ERR,"Error %d from tcsetattr  ",errno);
         return EXIT_FAILURE;
 	}
@@ -106,7 +104,7 @@ int port::set_port_block(int fd, int shouldBlock){
 	}
 
     m_port_cfg.c_cc[VMIN]  = shouldBlock ? 1 : 0;
-    m_port_cfg.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
+    m_port_cfg.c_cc[VTIME] = 5;            /* 0.5 seconds read timeout*/
 
     if (tcsetattr (fd, TCSANOW, &m_port_cfg) != 0){
         syslog(LOG_ERR,"Error %d from tcsetattr  ",errno);
@@ -156,7 +154,6 @@ int port::write_port(std::string message){
 	if(numBytes < 0){
 
         syslog(LOG_ERR,"Error %d while writing to port  ",errno);
-        //std::cout << "Error "<< errno << " writing: " << strerror(errno) << std::endl<<std::flush;
         return EXIT_FAILURE;
     }
     /*Check for return*/
@@ -214,7 +211,6 @@ int port::close_port(){
  * \return String representation of message
  */
 std::string port::char_arr_to_string(char * text,int size){
-	//int size = sizeof(text)/sizeof(text[0]);
     std::string output = "";
 	for (int i = 0; i < size; ++i) {
 		output = output + text[i];

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) Aero4TE, s.r.o. - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
 #ifndef HELPER_H
 #define HELPER_H
 #include <stddef.h>

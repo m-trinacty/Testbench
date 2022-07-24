@@ -1,11 +1,12 @@
 var searchData=
 [
-  ['get_154',['get',['../classserver.html#a472862a0ab97e218192f25c7fd647e72',1,'server']]],
-  ['get_5faxis_5fstate_155',['get_axis_state',['../classoDrive.html#a680b9d0c0294ce6ee29173b7247dfd78',1,'oDrive']]],
-  ['get_5fcurr_156',['get_curr',['../classoDrive.html#a9ce4dbc61c6c86d1f1b5c090156db755',1,'oDrive']]],
-  ['get_5fcurr_5fiq_157',['get_curr_Iq',['../classoDrive.html#a93f1e6fd30ab2e008f967624bed9f81a',1,'oDrive']]],
-  ['get_5flocking_5fvel_158',['get_locking_vel',['../classoDrive.html#aa8ede19a4a2fe5b10e79463ec78c9226',1,'oDrive']]],
-  ['get_5fmin_5fendstop_159',['get_min_endstop',['../classoDrive.html#a3f98ba2958ce2934a522c01d27de4326',1,'oDrive']]],
+  ['get_153',['get',['../classserver.html#a472862a0ab97e218192f25c7fd647e72',1,'server']]],
+  ['get_5faxis_5fstate_154',['get_axis_state',['../classoDrive.html#a680b9d0c0294ce6ee29173b7247dfd78',1,'oDrive']]],
+  ['get_5fcurr_155',['get_curr',['../classoDrive.html#a9ce4dbc61c6c86d1f1b5c090156db755',1,'oDrive']]],
+  ['get_5fcurr_5fiq_156',['get_curr_Iq',['../classoDrive.html#a93f1e6fd30ab2e008f967624bed9f81a',1,'oDrive']]],
+  ['get_5flocking_5fvel_157',['get_locking_vel',['../classoDrive.html#aa8ede19a4a2fe5b10e79463ec78c9226',1,'oDrive']]],
+  ['get_5fmin_5fendstop_158',['get_min_endstop',['../classoDrive.html#a3f98ba2958ce2934a522c01d27de4326',1,'oDrive']]],
+  ['get_5fmsg_159',['get_msg',['../classserver.html#a550b0c5008d1c9e5ed6960b589e1c42a',1,'server']]],
   ['get_5fport_160',['get_port',['../classport.html#aed54ef2c5c21c4ddb86bf63de220698b',1,'port']]],
   ['get_5fpos_5fcir_161',['get_pos_cir',['../classoDrive.html#afaf43872b078dd11488b10035bea0740',1,'oDrive']]],
   ['get_5fpos_5fcpr_5fcnt_162',['get_pos_cpr_cnt',['../classoDrive.html#a1bcda0589ac37fe0ba74b15c6145820f',1,'oDrive']]],
